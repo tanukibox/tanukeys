@@ -100,8 +100,22 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         Ok(())
     }
 
-    async fn delete_one(&self, _user_id: &UserId, _id: &CryptoKeyId) -> Result<(), DynError> {
-        todo!()
+    async fn delete_one(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<(), DynError> {
+        let res = sqlx::query("DELETE FROM kernel.cryptokeys WHERE id = $1 and user_id = $2")
+            .bind(id.value())
+            .bind(user_id.value())
+            .fetch_optional(&self.pool)
+            .await;
+        if res.is_err() { // TODO: check sql error code or message
+            return match res.err().unwrap() {
+                Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
+                err => {
+                    error!("Error: {:?}", err);
+                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                }
+            }
+        }
+        Ok(())
     }
 }
 
