@@ -19,7 +19,6 @@ impl SqlxPostgresUserRepository {
         Self { pool }
     }
 
-    #[tracing::instrument(skip_all)]
     pub async fn from_env() -> Self {
         let url_load_res = std::env::var("DATABASE_URL");
         if url_load_res.is_err() {
@@ -42,7 +41,6 @@ impl SqlxPostgresUserRepository {
 #[async_trait]
 impl UserRepository for SqlxPostgresUserRepository {
 
-    #[tracing::instrument]
     async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn std::error::Error>> {
         let query = sqlx::query_as("SELECT id, name FROM kernel.users WHERE id = $1")
             .bind(id.value());
@@ -59,7 +57,6 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(user_res.unwrap().to_domain())
     }
 
-    #[tracing::instrument(skip_all)]
     async fn create_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
         let sql_user: SqlxUser = SqlxUser::from_domain(user);
         let res = sqlx::query("INSERT INTO kernel.users (id, name) VALUES ($1, $2)")
@@ -79,7 +76,6 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(())
     }
 
-    #[tracing::instrument(skip_all)]
     async fn update_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
         let sql_user: SqlxUser = SqlxUser::from_domain(user);
         let res = sqlx::query("UPDATE kernel.users SET name = $1 WHERE id = $2")
@@ -101,7 +97,6 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(())
     }
 
-    #[tracing::instrument(skip_all)]
     async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
         let res = sqlx::query("DELETE FROM kernel.users WHERE id = $1")
             .bind(id.value())
