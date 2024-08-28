@@ -1,0 +1,11 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1"
+uuid = "1.10.0"
+serde = { version = "1.0.200", features = ["derive"] }
+aggregate_root = { path = "../shared/aggregate_root" }
+domain_errors = { path = "../shared/domain_errors" }
