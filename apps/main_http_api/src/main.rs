@@ -11,15 +11,24 @@ use kernel::users::{
 };
 use v1::health::health_controller;
 
+use tracing::{self as logger};
+
 pub mod v1;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv::from_path("./apps/main_http_api/.env").ok();
+
+    tracing_subscriber::fmt()
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        //.pretty()
+        .with_timer(tracing_subscriber::fmt::time::ChronoUtc::rfc3339())
+        .init();
+
     let host = "127.0.0.1";
     let port = std::env::var("PORT").expect("PORT must be set");
     let address = format!("{}:{}", host, port);
-    println!("Starting server at http://{}:{}/", host, port);
+    logger::info!("Starting server at http://{}:{}/.", host, port);
 
     let thread_counter = Arc::new(AtomicU16::new(0));
 
@@ -34,7 +43,7 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
-        println!("Starting thread {}", thread_counter);
+        logger::info!("Thread {} started.", thread_counter);
         App::new()
             .app_data(user_finder_ref.clone())
             .app_data(user_creator_ref.clone())

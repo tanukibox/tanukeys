@@ -6,6 +6,9 @@ edition = "2021"
 [dependencies]
 actix-web = "4"
 dotenv = "0.15.0"
+tracing = "0.1"
+tracing-subscriber = "0.2"
+tracing-futures = "0.2"
 serde = "1.0.208"
 kernel = { path = "../../libs/kernel" }
 domain_errors = { path = "../../libs/shared/domain_errors" }
