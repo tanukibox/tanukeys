@@ -2,12 +2,14 @@ use actix_web::{
     web::{self, ServiceConfig},
     HttpResponse,
 };
+use tracing::{self as logger};
 
 pub fn router(cfg: &mut ServiceConfig) {
     cfg.route("/health", web::get().to(controller));
 }
 
 async fn controller() -> HttpResponse {
+    logger::debug!("Health check endpoint called.");
     HttpResponse::Ok().finish()
 }
 
