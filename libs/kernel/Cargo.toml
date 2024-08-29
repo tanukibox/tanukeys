@@ -8,6 +8,7 @@ uuid = "1.10.0"
 tracing = "0.1"
 tracing-subscriber = "0.2"
 tracing-futures = "0.2"
+sqlx = { version = "0.8", features = [ "postgres", "runtime-tokio" ] }
 serde = { version = "1.0.200", features = ["derive"] }
 aggregate_root = { path = "../shared/aggregate_root" }
 domain_errors = { path = "../shared/domain_errors" }
