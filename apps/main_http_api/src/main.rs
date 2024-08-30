@@ -7,7 +7,7 @@ use actix_web::{web::Data, App, HttpServer};
 
 use kernel::users::{
     application::{create_one::user_creator::UserCreator, find_one::user_finder::UserFinder},
-    infrastructure::inmemory::memory_user_repository::MemoryUserRepository,
+    infrastructure::sqlx::sqlx_postgres_user_repository::SqlxPostgresUserRepository,
 };
 use v1::health::health_controller;
 
@@ -32,7 +32,7 @@ async fn main() -> std::io::Result<()> {
 
     let thread_counter = Arc::new(AtomicU16::new(0));
 
-    let user_repository = MemoryUserRepository::new();
+    let user_repository = SqlxPostgresUserRepository::from_env().await;
     let user_repository_ref = Arc::new(user_repository);
 
     let user_finder = UserFinder::new(user_repository_ref.clone());
@@ -47,7 +47,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(user_finder_ref.clone())
             .app_data(user_creator_ref.clone())
-            .configure(v1::users::router::<MemoryUserRepository>)
+            .configure(v1::users::router::<SqlxPostgresUserRepository>)
             .configure(health_controller::router)
     })
     .bind(&address)

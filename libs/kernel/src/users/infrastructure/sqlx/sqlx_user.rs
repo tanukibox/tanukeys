@@ -5,8 +5,8 @@ use crate::users::domain::entities::{user::User, user_id::UserId, user_name::Use
 
 #[derive(Debug, FromRow)]
 pub struct SqlxUser {   
-    id: String,
-    name: String,
+    pub id: String,
+    pub name: String,
 }
 
 impl SqlxUser {
@@ -15,5 +15,12 @@ impl SqlxUser {
             UserId::new(self.id),
             UserName::new(self.name),
         )
+    }
+
+    pub fn from_domain(user: &User) -> Self {
+        Self {
+            id: user.id.value(),
+            name: user.name.value(),
+        }
     }
 }

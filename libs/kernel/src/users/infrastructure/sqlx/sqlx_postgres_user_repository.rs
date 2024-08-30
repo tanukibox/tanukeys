@@ -3,7 +3,7 @@ use core::panic;
 use async_trait::async_trait;
 use sqlx::Error;
 
-use crate::users::domain::{entities::{user::User, user_id::UserId}, errors::user_not_found_error::user_not_found_error, user_repository::UserRepository};
+use crate::users::domain::{entities::{user::User, user_id::UserId}, errors::{user_already_exists_error::user_already_exists_error, user_not_found_error::user_not_found_error}, user_repository::UserRepository};
 
 use super::sqlx_user::SqlxUser;
 
@@ -43,15 +43,42 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(user_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, _user: &User) -> Result<(), Box<dyn std::error::Error>> {
-        todo!()
+    async fn create_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
+        let sql_user: SqlxUser = SqlxUser::from_domain(user);
+        let res = sqlx::query("INSERT INTO users (id, name) VALUES ($1, $2)")
+            .bind(&sql_user.id)
+            .bind(&sql_user.name)
+            .fetch_optional(&self.pool)
+            .await;
+        if res.is_err() { // TODO: check sql error code or message
+            return Err(Box::new(user_already_exists_error(user.id.clone())));
+        }
+        Ok(())
     }
 
-    async fn update_one(&self, _user: &User) -> Result<(), Box<dyn std::error::Error>> {
-        todo!()
+    async fn update_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
+        let sql_user: SqlxUser = SqlxUser::from_domain(user);
+        let res = sqlx::query("UPDATE users SET name = $1 WHERE id = $2")
+            .bind(&sql_user.name)
+            .bind(&sql_user.id)
+            .fetch_one(&self.pool)
+            .await;
+
+        if res.is_err() { // TODO: check sql error code or message
+            return Err(Box::new(user_not_found_error(user.id.clone())));
+        }
+
+        Ok(())
     }
 
-    async fn delete_one(&self, _id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
-        todo!()
+    async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
+        let res = sqlx::query("DELETE FROM users WHERE id = $1")
+            .bind(id.value())
+            .fetch_one(&self.pool)
+            .await;
+        if res.is_err() { // TODO: check sql error code or message
+            return Err(Box::new(user_not_found_error(id.clone())));
+        }
+        Ok(())
     }
 }
