@@ -41,15 +41,15 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(user_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn create_one(&self, _user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 
-    async fn update_one(&self, user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn update_one(&self, _user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 
-    async fn delete_one(&self, id: &crate::users::domain::entities::user_id::UserId) -> Result<(), Box<dyn std::error::Error>> {
+    async fn delete_one(&self, _id: &crate::users::domain::entities::user_id::UserId) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 }
