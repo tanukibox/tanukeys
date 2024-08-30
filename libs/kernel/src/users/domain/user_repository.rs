@@ -1,8 +1,10 @@
 use std::error::Error;
 
+use async_trait::async_trait;
+
 use super::entities::{user::User, user_id::UserId};
 
-#[allow(async_fn_in_trait)]
+#[async_trait]
 pub trait UserRepository: Send + Sync + 'static {
     async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn Error>>;
     async fn create_one(&self, user: &User) -> Result<(), Box<dyn Error>>;

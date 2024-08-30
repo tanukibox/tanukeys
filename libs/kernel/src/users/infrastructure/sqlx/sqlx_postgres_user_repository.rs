@@ -1,8 +1,9 @@
 use core::panic;
 
+use async_trait::async_trait;
 use sqlx::Error;
 
-use crate::users::domain::{errors::user_not_found_error::user_not_found_error, user_repository::UserRepository};
+use crate::users::domain::{entities::{user::User, user_id::UserId}, errors::user_not_found_error::user_not_found_error, user_repository::UserRepository};
 
 use super::sqlx_user::SqlxUser;
 
@@ -31,8 +32,9 @@ impl SqlxPostgresUserRepository {
     }
 }
 
+#[async_trait]
 impl UserRepository for SqlxPostgresUserRepository {
-    async fn find_by_id(&self, id: &crate::users::domain::entities::user_id::UserId) -> Result<crate::users::domain::entities::user::User, Box<dyn std::error::Error>> {
+    async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn std::error::Error>> {
         let query = sqlx::query_as("SELECT id, name FROM users WHERE id = $1").bind(id.value());
         let user_res: Result<SqlxUser, Error> = query.fetch_one(&self.pool).await;
         if user_res.is_err() {
@@ -41,15 +43,15 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(user_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, _user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn create_one(&self, _user: &User) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 
-    async fn update_one(&self, _user: &crate::users::domain::entities::user::User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn update_one(&self, _user: &User) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 
-    async fn delete_one(&self, _id: &crate::users::domain::entities::user_id::UserId) -> Result<(), Box<dyn std::error::Error>> {
+    async fn delete_one(&self, _id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
         todo!()
     }
 }

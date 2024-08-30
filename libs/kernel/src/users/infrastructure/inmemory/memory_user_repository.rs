@@ -1,5 +1,7 @@
 use std::{error::Error, sync::RwLock};
 
+use async_trait::async_trait;
+
 use crate::users::domain::{
     entities::{user::User, user_id::UserId},
     errors::{
@@ -21,6 +23,7 @@ impl MemoryUserRepository {
     }
 }
 
+#[async_trait]
 impl UserRepository for MemoryUserRepository {
     async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn Error>> {
         let res = self
@@ -53,16 +56,8 @@ impl UserRepository for MemoryUserRepository {
         }
     }
 
-    async fn update_one(&self, user: &User) -> Result<(), Box<dyn Error>> {
-        let res = self.find_by_id(&user.id).await;
-        match res {
-            Ok(_) => {
-                self.delete_one(&user.id).await?;
-                self.users.write().unwrap().push(user.clone());
-                Ok(())
-            }
-            Err(e) => Err(e),
-        }
+    async fn update_one(&self, _user: &User) -> Result<(), Box<dyn Error>> {
+        todo!();
     }
 
     async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn Error>> {
