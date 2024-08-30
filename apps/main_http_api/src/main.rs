@@ -6,7 +6,7 @@ use std::sync::{
 use actix_web::{web::Data, App, HttpServer};
 
 use kernel::users::{
-    application::{create_one::user_creator::UserCreator, find_one::user_finder::UserFinder},
+    application::{create_one::user_creator::UserCreator, find_one::user_finder::UserFinder, update_one::user_updater::UserUpdater},
     infrastructure::sqlx::sqlx_postgres_user_repository::SqlxPostgresUserRepository,
 };
 use v1::health::health_controller;
@@ -41,12 +41,16 @@ async fn main() -> std::io::Result<()> {
     let user_creator = UserCreator::new(user_repository_ref.clone());
     let user_creator_ref = Data::new(user_creator);
 
+    let user_updater = UserUpdater::new(user_repository_ref.clone());
+    let user_updater_ref = Data::new(user_updater);
+
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
         logger::info!("Thread {} started.", thread_counter);
         App::new()
             .app_data(user_finder_ref.clone())
             .app_data(user_creator_ref.clone())
+            .app_data(user_updater_ref.clone())
             .configure(v1::users::router::<SqlxPostgresUserRepository>)
             .configure(health_controller::router)
     })

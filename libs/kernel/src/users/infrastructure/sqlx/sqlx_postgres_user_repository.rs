@@ -61,7 +61,7 @@ impl UserRepository for SqlxPostgresUserRepository {
         let res = sqlx::query("UPDATE users SET name = $1 WHERE id = $2")
             .bind(&sql_user.name)
             .bind(&sql_user.id)
-            .fetch_one(&self.pool)
+            .fetch_optional(&self.pool)
             .await;
 
         if res.is_err() { // TODO: check sql error code or message
