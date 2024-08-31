@@ -74,7 +74,7 @@ impl UserRepository for SqlxPostgresUserRepository {
     async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
         let res = sqlx::query("DELETE FROM users WHERE id = $1")
             .bind(id.value())
-            .fetch_one(&self.pool)
+            .fetch_optional(&self.pool)
             .await;
         if res.is_err() { // TODO: check sql error code or message
             return Err(Box::new(user_not_found_error(id.clone())));
