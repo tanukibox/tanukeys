@@ -3,8 +3,7 @@ use std::{error::Error, sync::Arc};
 use events::domain::event_bus::EventBus;
 
 use crate::users::domain::{
-    entities::{user::User, user_id::UserId, user_name::UserName},
-    user_repository::UserRepository,
+    entities::{user::User, user_id::UserId, user_name::UserName}, events::user_created_event::UserCreatedEvent, user_repository::UserRepository
 };
 
 pub struct UserCreator<R: UserRepository, E: EventBus> {
@@ -19,6 +18,12 @@ impl<R: UserRepository, E: EventBus> UserCreator<R, E> {
 
     pub async fn run(&self, id: UserId, name: UserName) -> Result<(), Box<dyn Error>> {
         let user = User::new(id, name);
-        self.user_repository.create_one(&user).await
+        let res = self.user_repository.create_one(&user).await;
+        if res.is_err() {
+            return Err(res.err().unwrap());
+        }
+        let created_event = UserCreatedEvent::new_shared(user.id, user.name);
+        self.event_bus.publish(created_event).await;
+        Ok(())
     }
 }
