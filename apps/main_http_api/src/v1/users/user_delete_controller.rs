@@ -20,6 +20,10 @@ async fn controller<R: UserRepository>(
     deleter: web::Data<UserDeleter<R>>,
 ) -> HttpResponse {
     let user_id = UserId::new(user_id.clone());
+    if user_id.is_err() {
+        return HttpResponse::BadRequest().finish();
+    }
+    let user_id = user_id.unwrap();
 
     let res = deleter.run(user_id).await;
     match res {

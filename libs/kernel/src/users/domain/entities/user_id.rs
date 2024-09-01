@@ -1,4 +1,4 @@
-use std::hash::{Hash, Hasher};
+use std::{hash::{Hash, Hasher}, error::Error};
 
 #[derive(Debug)]
 pub struct UserId {
@@ -6,8 +6,8 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn new(id: String) -> UserId {
-        Self { value: id }
+    pub fn new(id: String) -> Result<UserId, Box<dyn Error>> {
+        Ok(Self { value: id })
     }
 
     pub fn value(&self) -> String {
@@ -31,6 +31,6 @@ impl Eq for UserId {}
 
 impl Clone for UserId {
     fn clone(&self) -> Self {
-        Self::new(self.value.clone())
+        Self::new(self.value()).unwrap()
     }
 }
