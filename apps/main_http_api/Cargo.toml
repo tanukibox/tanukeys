@@ -12,6 +12,7 @@ tracing-futures = "0.2"
 serde = "1.0.208"
 kernel = { path = "../../libs/kernel" }
 domain_errors = { path = "../../libs/shared/domain_errors" }
+events = { path = "../../libs/shared/events" }
 
 [dev-dependencies]
 actix-rt = "2"

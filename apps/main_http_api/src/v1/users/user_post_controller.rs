@@ -5,6 +5,7 @@ use actix_web::{
     HttpResponse,
 };
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
+use events::domain::event_bus::EventBus;
 use kernel::users::{
     application::create_one::user_creator::UserCreator,
     domain::{
@@ -14,13 +15,13 @@ use kernel::users::{
     infrastructure::dtos::json::user_dto::UserDto,
 };
 
-pub fn route<R: UserRepository>(cfg: &mut ServiceConfig) {
-    cfg.route("/", web::post().to(controller::<R>));
+pub fn route<R: UserRepository, E: EventBus>(cfg: &mut ServiceConfig) {
+    cfg.route("/", web::post().to(controller::<R, E>));
 }
 
-async fn controller<R: UserRepository>(
+async fn controller<R: UserRepository, E: EventBus>(
     dto: web::Json<UserDto>,
-    creator: web::Data<UserCreator<R>>,
+    creator: web::Data<UserCreator<R, E>>,
 ) -> HttpResponse {
     let user_id = UserId::new(dto.id.clone());
     let user_name = UserName::new(dto.name.clone());
