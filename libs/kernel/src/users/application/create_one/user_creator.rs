@@ -1,9 +1,9 @@
 use std::{error::Error, sync::Arc};
 
 use events::domain::event_bus::EventBus;
-
+use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{
-    entities::{user::User, user_id::UserId, user_name::UserName}, events::user_created_event::UserCreatedEvent, user_repository::UserRepository
+    entities::{user::User, user_name::UserName}, events::user_created_event::UserCreatedEvent, user_repository::UserRepository
 };
 
 pub struct UserCreator<R: UserRepository, E: EventBus> {

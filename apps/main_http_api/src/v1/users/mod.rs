@@ -7,7 +7,7 @@ mod user_post_controller;
 mod user_put_controller;
 mod user_delete_controller;
 
-pub fn router<R: UserRepository, E: EventBus>(cfg: &mut actix_web::web::ServiceConfig) {
+pub fn router<R: UserRepository, E: EventBus>(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/api/v1/users")
             .configure(user_post_controller::route::<R, E>)

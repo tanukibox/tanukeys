@@ -6,10 +6,11 @@ use actix_web::{
 };
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use events::domain::event_bus::EventBus;
+use kernel::shared::domain::entities::user_id::UserId;
 use kernel::users::{
     application::create_one::user_creator::UserCreator,
     domain::{
-        entities::{user_id::UserId, user_name::UserName},
+        entities::user_name::UserName,
         user_repository::UserRepository,
     },
     infrastructure::dtos::json::user_dto::UserDto,

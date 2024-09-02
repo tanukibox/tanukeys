@@ -1,9 +1,9 @@
 use std::{error::Error, sync::RwLock};
 
 use async_trait::async_trait;
-
+use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{
-    entities::{user::User, user_id::UserId},
+    entities::user::User,
     errors::{
         user_already_exists_error::user_already_exists_error,
         user_not_found_error::user_not_found_error,

@@ -5,9 +5,10 @@ use actix_web::{
     HttpResponse,
 };
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
+use kernel::shared::domain::entities::user_id::UserId;
 use kernel::users::{
     application::find_one::user_finder::UserFinder,
-    domain::{entities::user_id::UserId, user_repository::UserRepository},
+    domain::user_repository::UserRepository,
     infrastructure::dtos::json::user_dto::parse_to_dto,
 };
 

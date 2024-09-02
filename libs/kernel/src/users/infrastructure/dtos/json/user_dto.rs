@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-
-use crate::users::domain::entities::{user::User, user_id, user_name};
+use crate::shared::domain::entities::user_id;
+use crate::users::domain::entities::{user::User, user_name};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct UserDto {

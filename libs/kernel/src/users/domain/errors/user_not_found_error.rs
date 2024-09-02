@@ -1,6 +1,6 @@
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 
-use crate::users::domain::entities::user_id::UserId;
+use crate::shared::domain::entities::user_id::UserId;
 
 use super::user_errors::UserErrorTypes;
 
