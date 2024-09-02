@@ -21,8 +21,10 @@ async fn controller<R: UserRepository>(
     finder: web::Data<UserFinder<R>>,
 ) -> HttpResponse {
     let user_id = UserId::new(user_id.parse().unwrap());
-
-    let res = finder.run(user_id).await;
+    if user_id.is_err() {
+        return HttpResponse::BadRequest().finish()
+    }
+    let res = finder.run(user_id.unwrap()).await;
     match res {
         Ok(user) => {
             let dto = parse_to_dto(&user);

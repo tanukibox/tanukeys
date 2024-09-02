@@ -12,8 +12,8 @@ pub struct SqlxUser {
 impl SqlxUser {
     pub fn to_domain(self) -> User {
         User::new(
-            UserId::new(self.id),
-            UserName::new(self.name),
+            UserId::new(self.id).unwrap(),
+            UserName::new(self.name).unwrap(),
         )
     }
 

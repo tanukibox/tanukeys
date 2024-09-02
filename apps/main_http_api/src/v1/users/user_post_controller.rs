@@ -25,9 +25,15 @@ async fn controller<R: UserRepository, E: EventBus>(
     creator: web::Data<UserCreator<R, E>>,
 ) -> HttpResponse {
     let user_id = UserId::new(dto.id.clone());
+    if user_id.is_err() {
+        return HttpResponse::BadRequest().finish()
+    }
     let user_name = UserName::new(dto.name.clone());
+    if user_name.is_err() {
+        return HttpResponse::BadRequest().finish()
+    }
 
-    let res = creator.run(user_id, user_name).await;
+    let res = creator.run(user_id.unwrap(), user_name.unwrap()).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

@@ -9,6 +9,7 @@ use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use events::domain::event_bus::EventBus;
 use kernel::shared::domain::entities::user_id::UserId;
 use kernel::users::{application::delete_one::user_deleter::UserDeleter, domain::user_repository::UserRepository};
+use kernel::users::domain::entities::user_name::UserName;
 
 pub fn route<R: UserRepository, E: EventBus>(cfg: &mut ServiceConfig) {
     cfg.route("/{user_id}", web::delete().to(controller::<R, E>));
@@ -19,8 +20,11 @@ async fn controller<R: UserRepository, E: EventBus>(
     deleter: web::Data<UserDeleter<R, E>>,
 ) -> HttpResponse {
     let user_id = UserId::new(user_id.clone());
+    if user_id.is_err() {
+        return HttpResponse::BadRequest().finish()
+    }
 
-    let res = deleter.run(user_id).await;
+    let res = deleter.run(user_id.unwrap()).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {
