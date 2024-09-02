@@ -12,7 +12,7 @@ pub fn router<R: UserRepository, E: EventBus>(cfg: &mut actix_web::web::ServiceC
         web::scope("/api/v1/users")
             .configure(user_post_controller::route::<R, E>)
             .configure(user_get_controller::route::<R>)
-            .configure(user_put_controller::route::<R>)
+            .configure(user_put_controller::route::<R, E>)
             .configure(user_delete_controller::route::<R>),
     );
 }

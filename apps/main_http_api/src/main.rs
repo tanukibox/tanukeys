@@ -45,7 +45,7 @@ async fn main() -> std::io::Result<()> {
     let user_creator = UserCreator::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_creator_ref = Data::new(user_creator);
 
-    let user_updater = UserUpdater::new(user_repository_ref.clone());
+    let user_updater = UserUpdater::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_updater_ref = Data::new(user_updater);
 
     let user_deleter = UserDeleter::new(user_repository_ref.clone());
