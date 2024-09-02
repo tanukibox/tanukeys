@@ -1,3 +1,4 @@
+use std::error::Error;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -6,8 +7,8 @@ pub struct CryptoKeyPayload {
 }
 
 impl CryptoKeyPayload {
-    pub fn new(id: String) -> Self {
-        Self { value: id }
+    pub fn new(id: String) -> Result<Self, Box<dyn Error>> {
+        Ok(Self { value: id })
     }
 
     pub fn value(&self) -> String {
@@ -17,7 +18,7 @@ impl CryptoKeyPayload {
 
 impl Clone for CryptoKeyPayload {
     fn clone(&self) -> Self {
-        Self::new(self.value.clone())
+        Self::new(self.value.clone()).unwrap()
     }
 }
 
