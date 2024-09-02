@@ -17,13 +17,13 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
     }
 
     pub async fn run(&self, id: UserId, name: UserName) -> Result<(), Box<dyn Error>> {
-        let idbk = id.clone();
-        let user = User::new(id, name);
-        let res = self.user_repository.find_by_id(&idbk).await;
+        let res = self.user_repository.find_by_id(&id).await;
         if res.is_err() {
             return Err(res.err().unwrap());
         }
         let stored_user = res?;
+
+        let user = User::new(id, name);
         let res = self.user_repository.update_one(&user).await;
         if res.is_err() {
             return Err(res.err().unwrap());
