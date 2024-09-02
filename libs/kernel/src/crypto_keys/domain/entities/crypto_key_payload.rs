@@ -1,11 +1,11 @@
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
-pub struct UserId {
+pub struct CryptoKeyPayload {
     value: String,
 }
 
-impl UserId {
+impl CryptoKeyPayload {
     pub fn new(id: String) -> Self {
         Self { value: id }
     }
@@ -15,22 +15,21 @@ impl UserId {
     }
 }
 
-impl PartialEq for UserId {
+impl Clone for CryptoKeyPayload {
+    fn clone(&self) -> Self {
+        Self::new(self.value.clone())
+    }
+}
+
+impl PartialEq for CryptoKeyPayload {
     fn eq(&self, other: &Self) -> bool {
         self.value() == other.value()
     }
 }
+impl Eq for CryptoKeyPayload {}
 
-impl Eq for UserId {}
-
-impl Hash for UserId {
+impl Hash for CryptoKeyPayload {
     fn hash<H: Hasher>(&self, state: &mut H) {
         self.value.hash(state);
-    }
-}
-
-impl Clone for UserId {
-    fn clone(&self) -> Self {
-        Self::new(self.value.clone())
     }
 }
