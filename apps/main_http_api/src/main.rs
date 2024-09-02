@@ -48,7 +48,7 @@ async fn main() -> std::io::Result<()> {
     let user_updater = UserUpdater::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_updater_ref = Data::new(user_updater);
 
-    let user_deleter = UserDeleter::new(user_repository_ref.clone());
+    let user_deleter = UserDeleter::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_deleter_ref = Data::new(user_deleter);
 
     HttpServer::new(move || {

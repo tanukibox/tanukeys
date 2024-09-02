@@ -6,18 +6,19 @@ use actix_web::{
     HttpResponse,
 };
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
+use events::domain::event_bus::EventBus;
 use kernel::users::{application::delete_one::user_deleter::UserDeleter, domain::{
         entities::user_id::UserId,
         user_repository::UserRepository,
     }};
 
-pub fn route<R: UserRepository>(cfg: &mut ServiceConfig) {
-    cfg.route("/{user_id}", web::delete().to(controller::<R>));
+pub fn route<R: UserRepository, E: EventBus>(cfg: &mut ServiceConfig) {
+    cfg.route("/{user_id}", web::delete().to(controller::<R, E>));
 }
 
-async fn controller<R: UserRepository>(
+async fn controller<R: UserRepository, E: EventBus>(
     user_id: web::Path<String>,
-    deleter: web::Data<UserDeleter<R>>,
+    deleter: web::Data<UserDeleter<R, E>>,
 ) -> HttpResponse {
     let user_id = UserId::new(user_id.clone());
 
