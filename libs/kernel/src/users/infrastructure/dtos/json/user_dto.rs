@@ -1,7 +1,7 @@
-use std::error::Error;
-use serde::{Deserialize, Serialize};
 use crate::shared::domain::entities::user_id;
 use crate::users::domain::entities::{user::User, user_name};
+use serde::{Deserialize, Serialize};
+use std::error::Error;
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct UserDto {

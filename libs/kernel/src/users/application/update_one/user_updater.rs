@@ -1,11 +1,11 @@
-use std::{error::Error, sync::Arc};
-use events::domain::event_bus::EventBus;
 use crate::shared::domain::entities::user_id::UserId;
+use crate::users::domain::events::user_updated_event::UserUpdatedEvent;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName},
     user_repository::UserRepository,
 };
-use crate::users::domain::events::user_updated_event::UserUpdatedEvent;
+use events::domain::event_bus::EventBus;
+use std::{error::Error, sync::Arc};
 
 pub struct UserUpdater<R: UserRepository, E: EventBus> {
     user_repository: Arc<R>,

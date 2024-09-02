@@ -1,6 +1,6 @@
-use sqlx::prelude::FromRow;
 use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::entities::{user::User, user_name::UserName};
+use sqlx::prelude::FromRow;
 
 
 #[derive(Debug, FromRow)]

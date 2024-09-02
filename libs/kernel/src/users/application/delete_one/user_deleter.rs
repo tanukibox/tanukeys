@@ -1,8 +1,8 @@
+use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::events::user_deleted_event::UserDeletedEvent;
 use crate::users::domain::user_repository::UserRepository;
 use events::domain::event_bus::EventBus;
 use std::{error::Error, sync::Arc};
-use crate::shared::domain::entities::user_id::UserId;
 
 pub struct UserDeleter<R: UserRepository, E: EventBus> {
     user_repository: Arc<R>,

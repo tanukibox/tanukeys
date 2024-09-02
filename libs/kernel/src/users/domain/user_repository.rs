@@ -1,8 +1,8 @@
 use std::error::Error;
 
-use async_trait::async_trait;
-use crate::shared::domain::entities::user_id::UserId;
 use super::entities::user::User;
+use crate::shared::domain::entities::user_id::UserId;
+use async_trait::async_trait;
 
 #[async_trait]
 pub trait UserRepository: Send + Sync + 'static {

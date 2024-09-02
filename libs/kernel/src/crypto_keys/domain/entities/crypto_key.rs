@@ -1,6 +1,6 @@
-use aggregate_root::domain::aggregate_root::AggregateRoot;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
 use crate::shared::domain::entities::user_id::UserId;
+use aggregate_root::domain::aggregate_root::AggregateRoot;
 
 pub struct CryptoKey {
     pub payload: CryptoKeyPayload,

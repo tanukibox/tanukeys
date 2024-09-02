@@ -1,6 +1,5 @@
 use std::{error::Error, sync::RwLock};
 
-use async_trait::async_trait;
 use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{
     entities::user::User,
@@ -10,6 +9,7 @@ use crate::users::domain::{
     },
     user_repository::UserRepository,
 };
+use async_trait::async_trait;
 
 pub struct MemoryUserRepository {
     users: RwLock<Vec<User>>,

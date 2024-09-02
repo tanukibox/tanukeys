@@ -1,6 +1,6 @@
-use aggregate_root::domain::aggregate_root::AggregateRoot;
-use crate::shared::domain::entities::user_id::UserId;
 use super::user_name::UserName;
+use crate::shared::domain::entities::user_id::UserId;
+use aggregate_root::domain::aggregate_root::AggregateRoot;
 
 pub struct User {
     pub id: UserId,
