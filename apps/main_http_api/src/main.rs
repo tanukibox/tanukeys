@@ -51,6 +51,9 @@ async fn main() -> std::io::Result<()> {
     let user_deleter = UserDeleter::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_deleter_ref = Data::new(user_deleter);
 
+    let crypto_key_repository = SqlxPostgresUserRepository::from_env().await;
+    let _crypto_key_repository_ref = Arc::new(crypto_key_repository);
+
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
         logger::info!("Thread {} started.", thread_counter);
