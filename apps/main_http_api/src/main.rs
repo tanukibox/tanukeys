@@ -13,6 +13,9 @@ use kernel::users::{
 use v1::health::health_controller;
 
 use tracing::{self as logger};
+use kernel::crypto_keys::application::create_one::crypto_key_creator::CryptoKeyCreator;
+use kernel::crypto_keys::application::find_one::crypto_key_finder::CryptoKeyFinder;
+use kernel::crypto_keys::infrastructure::sqlx::sqlx_postgres_crypto_key_repository::SqlxPostgresCryptoKeyRepository;
 
 pub mod v1;
 
@@ -51,8 +54,14 @@ async fn main() -> std::io::Result<()> {
     let user_deleter = UserDeleter::new(user_repository_ref.clone(), event_bus_ref.clone());
     let user_deleter_ref = Data::new(user_deleter);
 
-    let crypto_key_repository = SqlxPostgresUserRepository::from_env().await;
-    let _crypto_key_repository_ref = Arc::new(crypto_key_repository);
+    let crypto_key_repository = SqlxPostgresCryptoKeyRepository::from_env().await;
+    let crypto_key_repository_ref = Arc::new(crypto_key_repository);
+
+    let crypto_key_finder = CryptoKeyFinder::new(crypto_key_repository_ref.clone());
+    let crypto_key_finder_ref = Data::new(crypto_key_finder);
+
+    let crypto_key_creator = CryptoKeyCreator::new(crypto_key_repository_ref.clone(), event_bus_ref.clone());
+    let crypto_key_creator_ref = Data::new(crypto_key_creator);
 
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
@@ -62,6 +71,10 @@ async fn main() -> std::io::Result<()> {
             .app_data(user_creator_ref.clone())
             .app_data(user_updater_ref.clone())
             .app_data(user_deleter_ref.clone())
+
+            .app_data(crypto_key_finder_ref.clone())
+            .app_data(crypto_key_creator_ref.clone())
+
             .configure(v1::users::router::<SqlxPostgresUserRepository, InMemoryEventBus>)
             .configure(health_controller::router)
     })
