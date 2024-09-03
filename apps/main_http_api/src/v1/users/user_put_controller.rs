@@ -18,7 +18,7 @@ pub fn route<R: UserRepository, E: EventBus>(cfg: &mut ServiceConfig) {
     cfg.route("/", web::put().to(controller::<R, E>));
 }
 
-async fn controller<R: UserRepository, E: EventBus>(
+pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     dto: web::Json<UserDto>,
     updater: web::Data<UserUpdater<R, E>>,
 ) -> HttpResponse {

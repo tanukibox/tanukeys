@@ -16,7 +16,7 @@ pub fn route<R: UserRepository>(cfg: &mut ServiceConfig) {
     cfg.route("/{user_id}", web::get().to(controller::<R>));
 }
 
-async fn controller<R: UserRepository>(
+pub(crate) async fn controller<R: UserRepository>(
     user_id: web::Path<String>,
     finder: web::Data<UserFinder<R>>,
 ) -> HttpResponse {

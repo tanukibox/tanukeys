@@ -13,7 +13,7 @@ pub fn route<R: UserRepository, E: EventBus>(cfg: &mut ServiceConfig) {
     cfg.route("/{user_id}", web::delete().to(controller::<R, E>));
 }
 
-async fn controller<R: UserRepository, E: EventBus>(
+pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     user_id: web::Path<String>,
     deleter: web::Data<UserDeleter<R, E>>,
 ) -> HttpResponse {
