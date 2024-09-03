@@ -1,9 +1,9 @@
-use std::{error::Error, sync::Arc};
-
+use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{
-    entities::{user::User, user_id::UserId},
+    entities::user::User,
     user_repository::UserRepository,
 };
+use std::{error::Error, sync::Arc};
 
 pub struct UserFinder<R: UserRepository> {
     user_repository: Arc<R>,

@@ -1,6 +1,6 @@
+use crate::shared::domain::entities::user_id::UserId;
+use crate::users::domain::entities::user_name::UserName;
 use events::domain::domain_event::DomainEvent;
-
-use crate::users::domain::entities::{user_id::UserId, user_name::UserName};
 
 
 pub struct UserCreatedEvent {

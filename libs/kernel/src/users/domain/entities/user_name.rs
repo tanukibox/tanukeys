@@ -1,6 +1,5 @@
 use std::error::Error;
 
-
 pub struct UserName {
     value: String,
 }
@@ -17,6 +16,7 @@ impl UserName {
 
 impl Clone for UserName {
     fn clone(&self) -> Self {
-        Self::new(self.value()).unwrap()
+        let res = Self::new(self.value());
+        res.unwrap()
     }
 }
