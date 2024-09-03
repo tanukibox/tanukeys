@@ -1,4 +1,5 @@
 use std::error::Error;
+use async_trait::async_trait;
 use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
@@ -10,6 +11,7 @@ use crate::shared::domain::entities::user_id::UserId;
 pub struct SqlxPostgresCryptoKeyRepository {
     pool: sqlx::PgPool,
 }
+
 impl SqlxPostgresCryptoKeyRepository {
     pub fn new(pool: sqlx::PgPool) -> Self {
         Self { pool }
@@ -30,6 +32,7 @@ impl SqlxPostgresCryptoKeyRepository {
     }
 }
 
+#[async_trait]
 impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
     async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, Box<dyn Error>> {
         let query = sqlx::query_as("SELECT id, name, payload, userId FROM cryptokeys WHERE id = $1").bind(id.value());
@@ -55,11 +58,11 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         Ok(())
     }
 
-    async fn update_one(&self, user: &CryptoKey) -> Result<(), Box<dyn Error>> {
+    async fn update_one(&self, _user: &CryptoKey) -> Result<(), Box<dyn Error>> {
         todo!()
     }
 
-    async fn delete_one(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<(), Box<dyn Error>> {
+    async fn delete_one(&self, _user_id: &UserId, _id: &CryptoKeyId) -> Result<(), Box<dyn Error>> {
         todo!()
     }
 }
