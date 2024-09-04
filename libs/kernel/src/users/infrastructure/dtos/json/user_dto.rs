@@ -19,8 +19,13 @@ pub fn parse_to_dto(user: &User) -> UserDto {
 pub fn parse_to_domain(dto: &UserDto) -> Result<User, Box<dyn Error>> {
     let user_id = user_id::UserId::new(dto.id.clone());
     if user_id.is_err() {
-        return Err(user_id.err().unwrap())
+        return Err(user_id.err().unwrap());
     }
+    let user_id = user_id.unwrap();
     let user_name = user_name::UserName::new(dto.name.clone());
-    Ok(User::new(user_id?, user_name?))
+    if user_name.is_err() {
+        return Err(user_name.err().unwrap());
+    }
+    let user_name = user_name.unwrap();
+    Ok(User::new(user_id, user_name))
 }

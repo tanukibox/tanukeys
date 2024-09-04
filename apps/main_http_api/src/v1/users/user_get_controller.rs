@@ -1,7 +1,7 @@
 use std::ops::Deref;
 
 use actix_web::{
-    web::{self, ServiceConfig},
+    web,
     HttpResponse,
 };
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
@@ -11,10 +11,6 @@ use kernel::users::{
     domain::user_repository::UserRepository,
     infrastructure::dtos::json::user_dto::parse_to_dto,
 };
-
-pub fn route<R: UserRepository>(cfg: &mut ServiceConfig) {
-    cfg.route("/{user_id}", web::get().to(controller::<R>));
-}
 
 pub(crate) async fn controller<R: UserRepository>(
     user_id: web::Path<String>,
