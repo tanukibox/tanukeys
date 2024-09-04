@@ -8,11 +8,7 @@ use kernel::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use kernel::crypto_keys::infrastructure::dtos::crypto_key_json_dto::{parse_to_domain, CryptoKeyJsonDto};
 use kernel::shared::domain::entities::user_id::UserId;
 
-pub fn route<R: CryptoKeyRepository, E: EventBus>(cfg: &mut ServiceConfig) {
-    cfg.route("/", web::post().to(controller::<R, E>));
-}
-
-async fn controller<R: CryptoKeyRepository, E: EventBus>(
+pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
     dto: web::Json<CryptoKeyJsonDto>,
     req: HttpRequest,
     creator: web::Data<CryptoKeyCreator<R, E>>,
