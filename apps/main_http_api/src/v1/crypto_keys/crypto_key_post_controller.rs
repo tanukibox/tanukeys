@@ -1,6 +1,6 @@
 use std::ops::Deref;
 
-use actix_web::{web::{self, ServiceConfig}, HttpRequest, HttpResponse};
+use actix_web::{web, HttpRequest, HttpResponse};
 use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use events::domain::event_bus::EventBus;
 use kernel::crypto_keys::application::create_one::crypto_key_creator::CryptoKeyCreator;

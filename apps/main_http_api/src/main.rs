@@ -76,6 +76,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(crypto_key_creator_ref.clone())
 
             .configure(v1::users::router::<SqlxPostgresUserRepository, InMemoryEventBus>)
+            .configure(v1::crypto_keys::router::<SqlxPostgresCryptoKeyRepository, InMemoryEventBus>)
             .configure(health_controller::router)
     })
     .bind(&address)
