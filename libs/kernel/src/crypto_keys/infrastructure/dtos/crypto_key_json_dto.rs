@@ -1,10 +1,10 @@
-use crate::shared::domain::entities::user_id;
-use serde::{Deserialize, Serialize};
-use std::error::Error;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
+use crate::shared::domain::entities::user_id;
+use crate::shared::domain::types::DynError;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct CryptoKeyJsonDto {
@@ -23,7 +23,7 @@ pub fn parse_to_dto(key: &CryptoKey) -> CryptoKeyJsonDto {
     }
 }
 
-pub fn parse_to_domain(dto: &CryptoKeyJsonDto) -> Result<CryptoKey, Box<dyn Error>> {
+pub fn parse_to_domain(dto: &CryptoKeyJsonDto) -> Result<CryptoKey, DynError> {
     let id = CryptoKeyId::new(dto.id.clone());
     if id.is_err() {
         return Err(id.err().unwrap())

@@ -1,6 +1,7 @@
-use std::{error::Error, sync::RwLock};
+use std::sync::RwLock;
 
 use crate::shared::domain::entities::user_id::UserId;
+use crate::shared::domain::types::DynError;
 use crate::users::domain::{
     entities::user::User,
     errors::{
@@ -25,7 +26,7 @@ impl MemoryUserRepository {
 
 #[async_trait]
 impl UserRepository for MemoryUserRepository {
-    async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn Error>> {
+    async fn find_by_id(&self, id: &UserId) -> Result<User, DynError> {
         let res = self
             .users
             .read()
@@ -39,7 +40,7 @@ impl UserRepository for MemoryUserRepository {
         }
     }
 
-    async fn create_one(&self, user: &User) -> Result<(), Box<dyn Error>> {
+    async fn create_one(&self, user: &User) -> Result<(), DynError> {
         let res = self
             .users
             .read()
@@ -56,11 +57,11 @@ impl UserRepository for MemoryUserRepository {
         }
     }
 
-    async fn update_one(&self, _user: &User) -> Result<(), Box<dyn Error>> {
+    async fn update_one(&self, _user: &User) -> Result<(), DynError> {
         todo!();
     }
 
-    async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn Error>> {
+    async fn delete_one(&self, id: &UserId) -> Result<(), DynError> {
         let res = self.find_by_id(&id).await;
         match res {
             Ok(_) => {

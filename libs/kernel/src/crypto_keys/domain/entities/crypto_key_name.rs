@@ -1,4 +1,4 @@
-use std::error::Error;
+use crate::shared::domain::types::DynError;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -7,7 +7,7 @@ pub struct CryptoKeyName {
 }
 
 impl CryptoKeyName {
-    pub fn new(val: String) -> Result<Self, Box<dyn Error>> {
+    pub fn new(val: String) -> Result<Self, DynError> {
         Ok(Self { value: val })
     }
 

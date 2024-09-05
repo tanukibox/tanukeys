@@ -1,4 +1,3 @@
-use std::error::Error;
 use async_trait::async_trait;
 use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
@@ -8,6 +7,7 @@ use crate::crypto_keys::infrastructure::sqlx::sqlx_crypto_key::SqlxCryptoKey;
 use crate::shared::domain::entities::user_id::UserId;
 
 use tracing::{self as logger};
+use crate::shared::domain::types::DynError;
 
 pub struct SqlxPostgresCryptoKeyRepository {
     pool: sqlx::PgPool,
@@ -38,7 +38,7 @@ impl SqlxPostgresCryptoKeyRepository {
 
 #[async_trait]
 impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
-    async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, Box<dyn Error>> {
+    async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, DynError> {
         let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE id = $1 AND user_id = $2")
             .bind(id.value())
             .bind(user_id.value());
@@ -57,7 +57,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         Ok(user_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, key: &CryptoKey) -> Result<(), Box<dyn Error>> {
+    async fn create_one(&self, key: &CryptoKey) -> Result<(), DynError> {
         let sql_user: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
         let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, user_id) VALUES ($1, $2, $3, $4)")
             .bind(&sql_user.id)
@@ -79,11 +79,11 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         Ok(())
     }
 
-    async fn update_one(&self, _user: &CryptoKey) -> Result<(), Box<dyn Error>> {
+    async fn update_one(&self, _user: &CryptoKey) -> Result<(), DynError> {
         todo!()
     }
 
-    async fn delete_one(&self, _user_id: &UserId, _id: &CryptoKeyId) -> Result<(), Box<dyn Error>> {
+    async fn delete_one(&self, _user_id: &UserId, _id: &CryptoKeyId) -> Result<(), DynError> {
         todo!()
     }
 }

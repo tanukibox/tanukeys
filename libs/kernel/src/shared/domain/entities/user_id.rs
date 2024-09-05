@@ -1,4 +1,4 @@
-use std::error::Error;
+use crate::shared::domain::types::DynError;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -7,7 +7,7 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn new(id: String) -> Result<Self, Box<dyn Error>> {
+    pub fn new(id: String) -> Result<Self, DynError> {
         Ok(Self { value: id })
     }
 
