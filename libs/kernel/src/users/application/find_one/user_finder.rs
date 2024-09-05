@@ -15,6 +15,7 @@ impl<R: UserRepository> UserFinder<R> {
         UserFinder { user_repository }
     }
 
+    #[tracing::instrument(skip_all)]
     pub async fn run(&self, user_id: UserId) -> Result<User, DynError> {
         self.user_repository.find_by_id(&user_id).await
     }

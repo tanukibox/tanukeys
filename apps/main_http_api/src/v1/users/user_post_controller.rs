@@ -15,11 +15,13 @@ use kernel::users::{
     },
     infrastructure::dtos::json::user_dto::UserDto,
 };
+use tracing::debug;
 
 pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     dto: web::Json<UserDto>,
     creator: web::Data<UserCreator<R, E>>,
 ) -> HttpResponse {
+    debug!("POST /api/v1/users/");
     let user_id = UserId::new(dto.id.clone());
     if user_id.is_err() {
         return HttpResponse::BadRequest().finish()
