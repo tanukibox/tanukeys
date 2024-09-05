@@ -38,7 +38,8 @@ impl SqlxPostgresUserRepository {
 #[async_trait]
 impl UserRepository for SqlxPostgresUserRepository {
     async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn std::error::Error>> {
-        let query = sqlx::query_as("SELECT id, name FROM users WHERE id = $1").bind(id.value());
+        let query = sqlx::query_as("SELECT id, name FROM users WHERE id = $1")
+            .bind(id.value());
         let user_res: Result<SqlxUser, Error> = query.fetch_one(&self.pool).await;
         if user_res.is_err() {
             return Err(Box::new(user_not_found_error(id.clone())));
