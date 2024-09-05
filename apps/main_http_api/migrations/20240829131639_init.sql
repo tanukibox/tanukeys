@@ -1,8 +1,4 @@
 -- Add migration script here
-DROP DATABASE IF EXISTS tanukeys;
-
-CREATE DATABASE tanukeys;
-
 CREATE SCHEMA kernel;
 
 CREATE TABLE IF NOT EXISTS users (
