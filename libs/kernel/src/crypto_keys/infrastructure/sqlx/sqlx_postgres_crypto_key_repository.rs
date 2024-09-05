@@ -3,10 +3,11 @@ use async_trait::async_trait;
 use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
-use crate::crypto_keys::domain::errors::crypto_key_already_exists_error::crypto_key_already_exists_error;
 use crate::crypto_keys::domain::errors::crypto_key_not_found_error::crypto_key_not_found_error;
 use crate::crypto_keys::infrastructure::sqlx::sqlx_crypto_key::SqlxCryptoKey;
 use crate::shared::domain::entities::user_id::UserId;
+
+use tracing::{self as logger};
 
 pub struct SqlxPostgresCryptoKeyRepository {
     pool: sqlx::PgPool,
@@ -28,6 +29,9 @@ impl SqlxPostgresCryptoKeyRepository {
             panic!("Failed to connect to database: {:?}", pool_res.err());
         }
         let pool = pool_res.unwrap();
+        sqlx::query("SET search_path TO kernel")
+            .execute(&pool)
+            .await.expect("Schema kernel not found.");
         Self::new(pool)
     }
 }
@@ -45,7 +49,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
     async fn create_one(&self, key: &CryptoKey) -> Result<(), Box<dyn Error>> {
         let sql_user: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
-        let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, userId) VALUES ($1, $2, $3, $4)")
+        let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, user_id) VALUES ($1, $2, $3, $4)")
             .bind(&sql_user.id)
             .bind(&sql_user.name)
             .bind(&sql_user.payload)
@@ -53,7 +57,14 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
             .fetch_optional(&self.pool)
             .await;
         if res.is_err() { // TODO: check sql error code or message
-            return Err(Box::new(crypto_key_already_exists_error(key.user_id.clone(), key.id.clone())));
+            match res.err().unwrap() {
+                sqlx::Error::Database(err) => {
+                    let _msg = err.message();
+                    let _code = err.code().unwrap();
+                    logger::error!("{}: {}", "Database", err);
+                }
+                _ => {}
+            }
         }
         Ok(())
     }

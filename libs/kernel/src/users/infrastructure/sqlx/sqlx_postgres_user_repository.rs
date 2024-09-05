@@ -28,6 +28,9 @@ impl SqlxPostgresUserRepository {
             panic!("Failed to connect to database: {:?}", pool_res.err());
         }
         let pool = pool_res.unwrap();
+        sqlx::query("SET search_path TO kernel")
+            .execute(&pool)
+            .await.expect("Schema kernel not found.");
         Self::new(pool)
     }
 }
