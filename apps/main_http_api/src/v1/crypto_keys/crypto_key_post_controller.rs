@@ -13,7 +13,8 @@ pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
     req: HttpRequest,
     creator: web::Data<CryptoKeyCreator<R, E>>,
 ) -> HttpResponse {
-    let auth_user = req.headers().get("X-USER");
+
+    let auth_user = req.headers().get("Authorization");
     if auth_user.is_none() {
         return HttpResponse::Unauthorized().finish();
     }
