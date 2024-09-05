@@ -1,11 +1,11 @@
 use core::panic;
 
+use super::sqlx_user::SqlxUser;
 use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{entities::user::User, errors::{user_already_exists_error::user_already_exists_error, user_not_found_error::user_not_found_error}, user_repository::UserRepository};
 use async_trait::async_trait;
+use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use sqlx::Error;
-
-use super::sqlx_user::SqlxUser;
 
 
 pub struct SqlxPostgresUserRepository {
@@ -42,7 +42,10 @@ impl UserRepository for SqlxPostgresUserRepository {
             .bind(id.value());
         let user_res: Result<SqlxUser, Error> = query.fetch_one(&self.pool).await;
         if user_res.is_err() {
-            return Err(Box::new(user_not_found_error(id.clone())));
+            return match user_res.err().unwrap() {
+                Error::Database(_) => Err(Box::new(user_not_found_error(id.clone()))),
+                _ => Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+            }
         }
         Ok(user_res.unwrap().to_domain())
     }
