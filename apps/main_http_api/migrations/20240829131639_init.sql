@@ -2,13 +2,16 @@
 CREATE DATABASE tanukeys;
 CREATE SCHEMA kernel;
 
+DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users (
     id text PRIMARY KEY,
     name text NOT NULL,
+    description text NOT NULL,
 
     _created_at timestamp with time zone DEFAULT now()
 );
 
+DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS cryptokeys (
     id text PRIMARY KEY,
     name text NOT NULL,
