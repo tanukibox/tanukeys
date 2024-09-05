@@ -15,11 +15,11 @@ GET http://localhost:3030/api/v1/cryptokeys/patata?user_id=patata
 ###
 POST http://localhost:3030/api/v1/cryptokeys/
 Content-Type: application/json
-Authorization: patata2
+Authorization: patata
 
 {
-  "id": "patata4",
+  "id": "patata",
   "name": "patata",
   "payload": "skhdl",
-  "user_id": "patata3"
+  "user_id": "patata"
 }
