@@ -1,11 +1,11 @@
-use std::error::Error;
+use crate::shared::domain::types::DynError;
 
 pub struct UserName {
     value: String,
 }
 
 impl UserName {
-    pub fn new(value: String) -> Result<UserName, Box<dyn Error>> {
+    pub fn new(value: String) -> Result<UserName, DynError> {
         Ok(Self { value })
     }
 
