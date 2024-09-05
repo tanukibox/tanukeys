@@ -1,13 +1,14 @@
-use std::{error::Error, sync::Arc};
+use std::sync::Arc;
 
-use crate::shared::domain::entities::user_id::UserId;
-use events::domain::event_bus::EventBus;
 use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
 use crate::crypto_keys::domain::events::crypto_key_created_event::CryptoKeyCreatedEvent;
+use crate::shared::domain::entities::user_id::UserId;
+use crate::shared::domain::types::DynError;
+use events::domain::event_bus::EventBus;
 
 pub struct CryptoKeyCreator<R: CryptoKeyRepository, E: EventBus> {
     repository: Arc<R>,
@@ -20,7 +21,7 @@ impl<R: CryptoKeyRepository, E: EventBus> CryptoKeyCreator<R, E> {
     }
 
     pub async fn run(&self, id: CryptoKeyId, name: CryptoKeyName, payload: CryptoKeyPayload, user_id: UserId,
-                        logged_user: UserId) -> Result<(), Box<dyn Error>> {
+                        logged_user: UserId) -> Result<(), DynError> {
         if user_id != logged_user {
             todo!("User must be the same error");
         }

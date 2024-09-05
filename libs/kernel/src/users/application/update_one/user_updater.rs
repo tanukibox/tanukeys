@@ -1,11 +1,12 @@
 use crate::shared::domain::entities::user_id::UserId;
+use crate::shared::domain::types::DynError;
 use crate::users::domain::events::user_updated_event::UserUpdatedEvent;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName},
     user_repository::UserRepository,
 };
 use events::domain::event_bus::EventBus;
-use std::{error::Error, sync::Arc};
+use std::sync::Arc;
 
 pub struct UserUpdater<R: UserRepository, E: EventBus> {
     user_repository: Arc<R>,
@@ -17,7 +18,7 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
         UserUpdater { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), Box<dyn Error>> {
+    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), DynError> {
         let res = self.user_repository.find_by_id(&id).await;
         if res.is_err() {
             return Err(res.err().unwrap());
