@@ -1,14 +1,12 @@
 use async_trait::async_trait;
-use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
-use crate::crypto_keys::domain::{crypto_key_repository::CryptoKeyRepository, errors::crypto_key_already_exists_error::crypto_key_already_exists_error};
+use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
-use crate::crypto_keys::domain::errors::crypto_key_not_found_error::crypto_key_not_found_error;
 use crate::crypto_keys::infrastructure::sqlx::sqlx_crypto_key::SqlxCryptoKey;
 use crate::shared::domain::entities::user_id::UserId;
+use crate::shared::domain::errors::DomainError;
 
 use tracing::error;
-use crate::shared::domain::types::DynError;
 
 pub struct SqlxPostgresCryptoKeyRepository {
     pool: sqlx::PgPool,
@@ -39,24 +37,24 @@ impl SqlxPostgresCryptoKeyRepository {
 
 #[async_trait]
 impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
-    async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, DynError> {
+    async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, DomainError> {
         let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE id = $1 AND user_id = $2")
             .bind(id.value())
             .bind(user_id.value());
         let key_res: Result<SqlxCryptoKey, sqlx::Error> = query.fetch_one(&self.pool).await;
         if key_res.is_err() {
             return match key_res.err().unwrap() {
-                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
+                sqlx::Error::RowNotFound => Err(DomainError::CryptoKeyNotFound { id: id.value(), user_id: user_id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
         Ok(key_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, key: &CryptoKey) -> Result<(), DynError> {
+    async fn create_one(&self, key: &CryptoKey) -> Result<(), DomainError> {
         let sql_user: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
         let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, user_id) VALUES ($1, $2, $3, $4)")
             .bind(&sql_user.id)
@@ -67,17 +65,17 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
             .await;
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                sqlx::Error::Database(_) => Err(Box::new(crypto_key_already_exists_error(key.user_id.clone(), key.id.clone()))),
+                sqlx::Error::Database(_) => Err(DomainError::CryptoKeyAlreadyExists { id: key.id.value(), user_id: key.user_id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
         Ok(())
     }
 
-    async fn update_one(&self, key: &CryptoKey) -> Result<(), DynError> {
+    async fn update_one(&self, key: &CryptoKey) -> Result<(), DomainError> {
         let sql_key: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
         let res = sqlx::query("UPDATE kernel.cryptokey SET name = $1, payload = $2 WHERE id = $3 and user_id = $4")
             .bind(&sql_key.name)
@@ -89,10 +87,10 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(key.user_id.clone(), key.id.clone()))),
+                sqlx::Error::RowNotFound => Err(DomainError::CryptoKeyNotFound { id: key.id.value(), user_id: key.user_id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
@@ -100,7 +98,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         Ok(())
     }
 
-    async fn delete_one(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<(), DynError> {
+    async fn delete_one(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<(), DomainError> {
         let res = sqlx::query("DELETE FROM kernel.cryptokeys WHERE id = $1 and user_id = $2")
             .bind(id.value())
             .bind(user_id.value())
@@ -108,10 +106,10 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
             .await;
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
+                sqlx::Error::RowNotFound => Err(DomainError::CryptoKeyNotFound { id: id.value(), user_id: user_id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }

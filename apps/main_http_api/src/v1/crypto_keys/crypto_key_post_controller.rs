@@ -1,12 +1,11 @@
-use std::ops::Deref;
 
 use actix_web::{web, HttpRequest, HttpResponse};
-use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use events::domain::event_bus::EventBus;
 use kernel::crypto_keys::application::create_one::crypto_key_creator::CryptoKeyCreator;
 use kernel::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use kernel::crypto_keys::infrastructure::dtos::crypto_key_json_dto::{parse_to_domain, CryptoKeyJsonDto};
 use kernel::shared::domain::entities::user_id::UserId;
+use kernel::shared::domain::errors::DomainError;
 
 pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
     dto: web::Json<CryptoKeyJsonDto>,
@@ -33,20 +32,15 @@ pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {
-            if let Some(err) = err.deref().downcast_ref::<DomainError>() {
-                match err.get_err_type() {
-                    GeneralErrorTypes::ResourceNotFound => {
-                        return HttpResponse::NotFound().body(err.message())
-                    }
-                    GeneralErrorTypes::ResourceAlreadyExists => {
-                        return HttpResponse::Conflict().body(err.message())
-                    }
-                    GeneralErrorTypes::Other => {
-                        return HttpResponse::InternalServerError().finish()
-                    }
-                };
+            match err {
+                DomainError::CryptoKeyNotFound { id, user_id } => {
+                    HttpResponse::NotFound().body(format!("Crypto key with id <{}>, not found for user <{}>.", id, user_id))
+                },
+                DomainError::CryptoKeyAlreadyExists { id, user_id } => {
+                    HttpResponse::Conflict().body(format!("Crypto key with id <{}>, already exists for user <{}>.", id, user_id))
+                },
+                _ => HttpResponse::InternalServerError().finish()
             }
-            HttpResponse::InternalServerError().finish()
         }
     }
 }

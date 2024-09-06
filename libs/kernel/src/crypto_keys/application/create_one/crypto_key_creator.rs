@@ -7,7 +7,7 @@ use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
 use crate::crypto_keys::domain::events::crypto_key_created_event::CryptoKeyCreatedEvent;
 use crate::shared::domain::entities::user_id::UserId;
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use events::domain::event_bus::EventBus;
 
 pub struct CryptoKeyCreator<R: CryptoKeyRepository, E: EventBus> {
@@ -21,7 +21,7 @@ impl<R: CryptoKeyRepository, E: EventBus> CryptoKeyCreator<R, E> {
     }
 
     pub async fn run(&self, id: CryptoKeyId, name: CryptoKeyName, payload: CryptoKeyPayload, user_id: UserId,
-                        logged_user: UserId) -> Result<(), DynError> {
+                        logged_user: UserId) -> Result<(), DomainError> {
         if user_id != logged_user {
             todo!("User must be the same error");
         }

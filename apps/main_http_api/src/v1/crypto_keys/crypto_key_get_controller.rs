@@ -1,8 +1,7 @@
-use std::ops::Deref;
 
 use actix_web::{web, HttpRequest, HttpResponse};
+use kernel::shared::domain::errors::DomainError;
 use serde::Deserialize;
-use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use kernel::crypto_keys::application::find_one::crypto_key_finder::CryptoKeyFinder;
 use kernel::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 use kernel::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
@@ -34,20 +33,15 @@ pub(crate) async fn controller<R: CryptoKeyRepository>(
             HttpResponse::Ok().json(dto)
         }
         Err(err) => {
-            if let Some(err) = err.deref().downcast_ref::<DomainError>() {
-                match err.get_err_type() {
-                    GeneralErrorTypes::ResourceNotFound => {
-                        return HttpResponse::NotFound().body(err.message())
-                    }
-                    GeneralErrorTypes::ResourceAlreadyExists => {
-                        return HttpResponse::Conflict().body(err.message())
-                    }
-                    GeneralErrorTypes::Other => {
-                        return HttpResponse::InternalServerError().finish()
-                    }
-                };
+            match err {
+                DomainError::CryptoKeyNotFound { id, user_id } => {
+                    HttpResponse::NotFound().body(format!("Crypto key with id <{}>, not found for user <{}>.", id, user_id))
+                },
+                DomainError::CryptoKeyAlreadyExists { id, user_id } => {
+                    HttpResponse::Conflict().body(format!("Crypto key with id <{}>, already exists for user <{}>.", id, user_id))
+                },
+                _ => HttpResponse::InternalServerError().finish()
             }
-            HttpResponse::InternalServerError().finish()
         }
     }
 }
