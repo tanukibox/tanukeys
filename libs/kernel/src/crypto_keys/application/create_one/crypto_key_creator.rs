@@ -23,7 +23,7 @@ impl<R: CryptoKeyRepository, E: EventBus> CryptoKeyCreator<R, E> {
     pub async fn run(&self, id: CryptoKeyId, name: CryptoKeyName, payload: CryptoKeyPayload, user_id: UserId,
                         logged_user: UserId) -> Result<(), DomainError> {
         if user_id != logged_user {
-            todo!("User must be the same error");
+            return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
         }
         let key = CryptoKey::new(id.clone(), name.clone(), payload.clone(), user_id.clone());
         let res = self.repository.create_one(&key).await;
