@@ -1,12 +1,13 @@
 use async_trait::async_trait;
-use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
+use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
+use crate::crypto_keys::domain::{crypto_key_repository::CryptoKeyRepository, errors::crypto_key_already_exists_error::crypto_key_already_exists_error};
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::errors::crypto_key_not_found_error::crypto_key_not_found_error;
 use crate::crypto_keys::infrastructure::sqlx::sqlx_crypto_key::SqlxCryptoKey;
 use crate::shared::domain::entities::user_id::UserId;
 
-use tracing::{self as logger};
+use tracing::error;
 use crate::shared::domain::types::DynError;
 
 pub struct SqlxPostgresCryptoKeyRepository {
@@ -42,19 +43,17 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
         let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE id = $1 AND user_id = $2")
             .bind(id.value())
             .bind(user_id.value());
-        let user_res: Result<SqlxCryptoKey, sqlx::Error> = query.fetch_one(&self.pool).await;
-        if user_res.is_err() {
-            match user_res.err().unwrap() {
-                sqlx::Error::Database(err) => {
-                    let _msg = err.message();
-                    let _code = err.code().unwrap();
-                    logger::error!("{}: {}", "Database", err);
+        let key_res: Result<SqlxCryptoKey, sqlx::Error> = query.fetch_one(&self.pool).await;
+        if key_res.is_err() {
+            return match key_res.err().unwrap() {
+                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
+                err => {
+                    error!("Error: {:?}", err);
+                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
                 }
-                _ => {}
             }
-            return Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone())));
         }
-        Ok(user_res.unwrap().to_domain())
+        Ok(key_res.unwrap().to_domain())
     }
 
     async fn create_one(&self, key: &CryptoKey) -> Result<(), DynError> {
@@ -67,13 +66,12 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
             .fetch_optional(&self.pool)
             .await;
         if res.is_err() { // TODO: check sql error code or message
-            match res.err().unwrap() {
-                sqlx::Error::Database(err) => {
-                    let _msg = err.message();
-                    let _code = err.code().unwrap();
-                    logger::error!("{}: {}", "Database", err);
+            return match res.err().unwrap() {
+                sqlx::Error::Database(_) => Err(Box::new(crypto_key_already_exists_error(key.user_id.clone(), key.id.clone()))),
+                err => {
+                    error!("Error: {:?}", err);
+                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
                 }
-                _ => {}
             }
         }
         Ok(())
