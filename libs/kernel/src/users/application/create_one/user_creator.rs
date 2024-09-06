@@ -1,4 +1,4 @@
-use std::{sync::Arc};
+use std::sync::Arc;
 
 use crate::shared::domain::entities::user_id::UserId;
 use crate::users::domain::{
