@@ -1,12 +1,12 @@
 use std::sync::Arc;
 
 use crate::shared::domain::entities::user_id::UserId;
+use crate::shared::domain::errors::DomainError;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName}, events::user_created_event::UserCreatedEvent, user_repository::UserRepository
 };
 use events::domain::event_bus::EventBus;
 use tracing::debug;
-use crate::shared::domain::types::DynError;
 
 
 pub struct UserCreator<R: UserRepository, E: EventBus> {
@@ -19,7 +19,7 @@ impl<R: UserRepository, E: EventBus> UserCreator<R, E> {
         UserCreator { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), DynError> {
+    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), DomainError> {
         debug!("START");
         let user = User::new(id, name);
         let res = self.user_repository.create_one(&user).await;

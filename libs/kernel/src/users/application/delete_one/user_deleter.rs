@@ -1,5 +1,5 @@
 use crate::shared::domain::entities::user_id::UserId;
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use crate::users::domain::events::user_deleted_event::UserDeletedEvent;
 use crate::users::domain::user_repository::UserRepository;
 use events::domain::event_bus::EventBus;
@@ -15,7 +15,7 @@ impl<R: UserRepository, E: EventBus> UserDeleter<R, E> {
         UserDeleter { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId) -> Result<(), DynError> {
+    pub async fn run(&self, id: UserId) -> Result<(), DomainError> {
         let res = self.user_repository.find_by_id(&id).await;
         if res.is_err() {
             return Err(res.err().unwrap());

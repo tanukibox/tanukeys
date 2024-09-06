@@ -1,5 +1,5 @@
 use crate::shared::domain::entities::user_id::UserId;
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use crate::users::domain::events::user_updated_event::UserUpdatedEvent;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName},
@@ -18,7 +18,7 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
         UserUpdater { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), DynError> {
+    pub async fn run(&self, id: UserId, name: UserName) -> Result<(), DomainError> {
         let res = self.user_repository.find_by_id(&id).await;
         if res.is_err() {
             return Err(res.err().unwrap());

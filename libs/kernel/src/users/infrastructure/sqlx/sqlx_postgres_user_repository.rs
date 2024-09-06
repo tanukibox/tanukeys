@@ -2,9 +2,9 @@ use core::panic;
 
 use super::sqlx_user::SqlxUser;
 use crate::shared::domain::entities::user_id::UserId;
-use crate::users::domain::{entities::user::User, errors::{user_already_exists_error::user_already_exists_error, user_not_found_error::user_not_found_error}, user_repository::UserRepository};
+use crate::shared::domain::errors::DomainError;
+use crate::users::domain::{entities::user::User, user_repository::UserRepository};
 use async_trait::async_trait;
-use domain_errors::domain_error::{DomainError, GeneralErrorTypes};
 use sqlx::Error;
 
 use tracing::{self as logger, error};
@@ -41,23 +41,23 @@ impl SqlxPostgresUserRepository {
 #[async_trait]
 impl UserRepository for SqlxPostgresUserRepository {
 
-    async fn find_by_id(&self, id: &UserId) -> Result<User, Box<dyn std::error::Error>> {
+    async fn find_by_id(&self, id: &UserId) -> Result<User, DomainError> {
         let query = sqlx::query_as("SELECT id, name FROM kernel.users WHERE id = $1")
             .bind(id.value());
         let user_res: Result<SqlxUser, Error> = query.fetch_one(&self.pool).await;
         if user_res.is_err() {
             return match user_res.err().unwrap() {
-                Error::RowNotFound => Err(Box::new(user_not_found_error(id.clone()))),
+                Error::RowNotFound => Err(DomainError::UserNotFound { user_id: id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
         Ok(user_res.unwrap().to_domain())
     }
 
-    async fn create_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn create_one(&self, user: &User) -> Result<(), DomainError> {
         let sql_user: SqlxUser = SqlxUser::from_domain(user);
         let res = sqlx::query("INSERT INTO kernel.users (id, name) VALUES ($1, $2)")
             .bind(&sql_user.id)
@@ -66,17 +66,17 @@ impl UserRepository for SqlxPostgresUserRepository {
             .await;
         if res.is_err() {
             return match res.err().unwrap() {
-                Error::Database(_) => Err(Box::new(user_already_exists_error(user.id.clone()))),
+                Error::Database(_) => Err(DomainError::UserAlreadyExists { user_id: user.id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
         Ok(())
     }
 
-    async fn update_one(&self, user: &User) -> Result<(), Box<dyn std::error::Error>> {
+    async fn update_one(&self, user: &User) -> Result<(), DomainError> {
         let sql_user: SqlxUser = SqlxUser::from_domain(user);
         let res = sqlx::query("UPDATE kernel.users SET name = $1 WHERE id = $2")
             .bind(&sql_user.name)
@@ -86,10 +86,10 @@ impl UserRepository for SqlxPostgresUserRepository {
 
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                Error::RowNotFound => Err(Box::new(user_not_found_error(user.id.clone()))),
+                Error::RowNotFound => Err(DomainError::UserNotFound { user_id: user.id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }
@@ -97,17 +97,17 @@ impl UserRepository for SqlxPostgresUserRepository {
         Ok(())
     }
 
-    async fn delete_one(&self, id: &UserId) -> Result<(), Box<dyn std::error::Error>> {
+    async fn delete_one(&self, id: &UserId) -> Result<(), DomainError> {
         let res = sqlx::query("DELETE FROM kernel.users WHERE id = $1")
             .bind(id.value())
             .fetch_optional(&self.pool)
             .await;
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                Error::RowNotFound => Err(Box::new(user_not_found_error(id.clone()))),
+                Error::RowNotFound => Err(DomainError::UserNotFound { user_id: id.value() }),
                 err => {
                     error!("Error: {:?}", err);
-                    Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
+                    Err(DomainError::Unknown)
                 }
             }
         }

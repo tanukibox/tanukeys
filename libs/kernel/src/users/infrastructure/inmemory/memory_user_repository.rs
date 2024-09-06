@@ -1,13 +1,11 @@
-use std::sync::RwLock;
+/*use std::sync::RwLock;
 
 use crate::shared::domain::entities::user_id::UserId;
 use crate::shared::domain::types::DynError;
+use crate::users::domain::errors::user_already_exists_error::user_already_exists_error;
+use crate::users::domain::errors::user_not_found_error::user_not_found_error;
 use crate::users::domain::{
     entities::user::User,
-    errors::{
-        user_already_exists_error::user_already_exists_error,
-        user_not_found_error::user_not_found_error,
-    },
     user_repository::UserRepository,
 };
 use async_trait::async_trait;
@@ -75,3 +73,4 @@ impl UserRepository for MemoryUserRepository {
         }
     }
 }
+*/
