@@ -20,6 +20,9 @@ pub enum DomainError {
     #[error("User with id <{user_id:?}> not found.")]
     UserNotFound { user_id: String },
 
+    #[error("User with id <{user_id:?}> not authorized.")]
+    UserNotAuthorized { user_id: String },
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     //                  CRYPTO KEY ERRORS
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
