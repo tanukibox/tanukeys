@@ -89,7 +89,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user.id.clone(), key.id.clone()))),
+                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(key.user_id.clone(), key.id.clone()))),
                 err => {
                     error!("Error: {:?}", err);
                     Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
@@ -108,7 +108,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
             .await;
         if res.is_err() { // TODO: check sql error code or message
             return match res.err().unwrap() {
-                Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
+                sqlx::Error::RowNotFound => Err(Box::new(crypto_key_not_found_error(user_id.clone(), id.clone()))),
                 err => {
                     error!("Error: {:?}", err);
                     Err(Box::new(DomainError::new("".to_string(), GeneralErrorTypes::Other, "".to_string())))
