@@ -39,6 +39,9 @@ pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
                 DomainError::CryptoKeyAlreadyExists { id, user_id } => {
                     HttpResponse::Conflict().body(format!("Crypto key with id <{}>, already exists for user <{}>.", id, user_id))
                 },
+                DomainError::UserNotAuthorized { user_id } => {
+                    HttpResponse::Unauthorized().body(format!("User <{}> not authorized.", user_id))
+                },
                 _ => HttpResponse::InternalServerError().finish()
             }
         }
