@@ -1,7 +1,6 @@
 
 use actix_web::{
-    web,
-    HttpResponse,
+    web, HttpRequest, HttpResponse
 };
 use events::domain::event_bus::EventBus;
 use kernel::shared::domain::entities::user_id::UserId;
@@ -15,8 +14,19 @@ use kernel::users::{
 
 pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     dto: web::Json<UserDto>,
+    req: HttpRequest,
     updater: web::Data<UserUpdater<R, E>>,
 ) -> HttpResponse {
+    let auth_user = req.headers().get("Authorization");
+    if auth_user.is_none() {
+        return HttpResponse::Unauthorized().finish();
+    }
+    let auth_user = UserId::new(auth_user.unwrap().to_str().unwrap().to_string());
+    if auth_user.is_err() {
+        return HttpResponse::Unauthorized().finish();
+    }
+    let auth_user = auth_user.unwrap();
+
     let user_id = UserId::new(dto.id.clone());
     if user_id.is_err() {
         return HttpResponse::BadRequest().finish()
@@ -26,7 +36,7 @@ pub(crate) async fn controller<R: UserRepository, E: EventBus>(
         return HttpResponse::BadRequest().finish()
     }
 
-    let res = updater.run(user_id.unwrap(), user_name.unwrap()).await;
+    let res = updater.run(user_id.unwrap(), user_name.unwrap(), auth_user).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

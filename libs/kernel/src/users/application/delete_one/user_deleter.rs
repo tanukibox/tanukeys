@@ -15,7 +15,10 @@ impl<R: UserRepository, E: EventBus> UserDeleter<R, E> {
         UserDeleter { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId) -> Result<(), DomainError> {
+    pub async fn run(&self, id: UserId, logged_user: UserId) -> Result<(), DomainError> {
+        if id != logged_user {
+            return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
+        }
         let res = self.user_repository.find_by_id(&id).await;
         if res.is_err() {
             return Err(res.err().unwrap());
