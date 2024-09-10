@@ -7,7 +7,6 @@ use crate::shared::domain::entities::user_id::UserId;
 use crate::shared::domain::errors::DomainError;
 use events::domain::event_bus::EventBus;
 use tracing::debug;
-use tracing_subscriber::field::debug;
 
 pub struct CryptoKeyDeleter<R: CryptoKeyRepository, E: EventBus> {
     repository: Arc<R>,
