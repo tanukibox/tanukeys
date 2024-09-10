@@ -20,19 +20,20 @@ impl<R: UserRepository, E: EventBus> UserCreator<R, E> {
     }
 
     pub async fn run(&self, id: UserId, name: UserName, logged_user: UserId) -> Result<(), DomainError> {
-        debug!("START");
+        debug!("Starting user creation");
         if id != logged_user {
+            debug!("User not authorized to create user with id: {}", id.value());
             return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
         }
-        let user = User::new(id, name);
+        let user = User::new(id.clone(), name);
         let res = self.user_repository.create_one(&user).await;
         if res.is_err() {
-            debug!("END");
+            debug!("Error creating user with id: {}", id.value());
             return Err(res.err().unwrap());
         }
         let created_event = UserCreatedEvent::new_shared(user.id, user.name);
         self.event_bus.publish(created_event).await;
-        debug!("END");
+        debug!("User with id: {} created", id.value());
         Ok(())
     }
 }

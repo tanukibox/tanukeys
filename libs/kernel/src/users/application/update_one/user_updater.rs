@@ -6,6 +6,7 @@ use crate::users::domain::{
     user_repository::UserRepository,
 };
 use events::domain::event_bus::EventBus;
+use tracing::debug;
 use std::sync::Arc;
 
 pub struct UserUpdater<R: UserRepository, E: EventBus> {
@@ -19,6 +20,7 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
     }
 
     pub async fn run(&self, id: UserId, name: UserName, logged_user: UserId) -> Result<(), DomainError> {
+        debug!("Starting user update");
         if id != logged_user {
             return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
         }
