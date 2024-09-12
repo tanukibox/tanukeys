@@ -8,10 +8,7 @@ variables:
 test:
   stage: test
   image: rust:1.80
-  before_script:
-    - apt install build-essential
-    - curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - . "$HOME/.cargo/env"
+  # before_script:
   script:
     - cargo test
 
