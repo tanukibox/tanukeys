@@ -11,6 +11,7 @@ test:
   before_script:
     - rustup update
   script:
+    - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     - cargo test
 
 # build:
