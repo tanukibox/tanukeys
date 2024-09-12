@@ -10,7 +10,6 @@ test:
   image: rust:1.80
   before_script:
     - curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    - rustup update
   script:
     - cargo test
 
