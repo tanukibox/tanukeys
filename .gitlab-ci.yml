@@ -13,13 +13,13 @@ test:
   script:
     - cargo test
 
-# build:
-#   stage: build
-#   image: rust:1.80
-#   before_script:
-#    - rustup update
-#   script:
-#    - cargo build --release
+build:
+  stage: build
+  image: rust:1.80
+  before_script:
+   - rustup update
+  script:
+   - cargo build --release
 
 # security:
 #   stage: security
