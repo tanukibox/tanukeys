@@ -1,6 +1,6 @@
 stages:
   - test
-#  - build
+  - build
 
 variables:
   RUST_BACKTRACE: "1"
@@ -8,15 +8,12 @@ variables:
 test:
   stage: test
   image: rust:1.80
-  # before_script:
   script:
     - cargo test
 
 build:
   stage: build
   image: rust:1.80
-  before_script:
-   - rustup update
   script:
    - cargo build --release
 
