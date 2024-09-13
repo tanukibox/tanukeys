@@ -9,13 +9,13 @@ test:
   stage: test
   image: rust:1.80
   script:
-    - cargo test
+    - make test
 
 build:
   stage: build
   image: rust:1.80
   script:
-   - cargo build --release
+   - make build
 
 # security:
 #   stage: security
