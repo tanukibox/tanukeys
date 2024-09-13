@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - security
 
 variables:
   RUST_BACKTRACE: "1"
