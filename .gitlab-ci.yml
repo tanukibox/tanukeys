@@ -8,8 +8,7 @@ variables:
 test:
   stage: test
   image: rust:1.80
-  before_script:
-    - rustup update
+  # before_script:
   script:
     - cargo test
 
