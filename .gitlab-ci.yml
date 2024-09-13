@@ -7,19 +7,19 @@ variables:
   RUST_BACKTRACE: "1"
 
 test:
-  stage: test
+  stage: Tests
   image: rust:1.80
   script:
     - make test
 
 build:
-  stage: build
+  stage: Build
   image: rust:1.80
   script:
    - make build
 
 security:
-  stage: security
+  stage: Vuln Scan
   image: rust:1.80
   before_script:
     - cargo install cargo-audit || echo "cargo-audit already installed"
