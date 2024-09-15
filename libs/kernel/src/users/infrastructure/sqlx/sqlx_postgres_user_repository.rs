@@ -42,7 +42,7 @@ impl SqlxPostgresUserRepository {
 impl UserRepository for SqlxPostgresUserRepository {
 
     async fn find_by_id(&self, id: &UserId) -> Result<User, DomainError> {
-        let query = sqlx::query_as("SELECT id, name FROM kernel.users WHERE id = $1")
+        let query = sqlx::query_as("SELECT id, name, bio FROM kernel.users WHERE id = $1")
             .bind(id.value());
         let user_res: Result<SqlxUser, Error> = query.fetch_one(&self.pool).await;
         if user_res.is_err() {
@@ -59,9 +59,10 @@ impl UserRepository for SqlxPostgresUserRepository {
 
     async fn create_one(&self, user: &User) -> Result<(), DomainError> {
         let sql_user: SqlxUser = SqlxUser::from_domain(user);
-        let res = sqlx::query("INSERT INTO kernel.users (id, name) VALUES ($1, $2)")
+        let res = sqlx::query("INSERT INTO kernel.users (id, name, bio) VALUES ($1, $2, $3)")
             .bind(&sql_user.id)
             .bind(&sql_user.name)
+            .bind(&sql_user.bio)
             .fetch_optional(&self.pool)
             .await;
         if res.is_err() {

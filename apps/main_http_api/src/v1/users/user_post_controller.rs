@@ -44,6 +44,9 @@ pub(crate) async fn controller<R: UserRepository, E: EventBus>(
                 DomainError::UserNotFound { user_id } => {
                     return HttpResponse::NotFound().body(format!("User with id <{}>, not found.", user_id))
                 },
+                DomainError::UserNotAuthorized { user_id } => {
+                    return HttpResponse::Unauthorized().body(format!("User with id <{}>, not authorized.", user_id))
+                },
                 _ => return HttpResponse::InternalServerError().finish()
             }
         }
