@@ -6,10 +6,10 @@ use std::sync::{
 use actix_web::{web::Data, App, HttpServer};
 
 use events::infrastructure::inmemory::inmemory_event_bus::InMemoryEventBus;
-use kernel::users::{
+use kernel::{crypto_keys::application::find_many_by_user::crypto_keys_by_user_finder::CryptoKeysByUserFinder, users::{
     application::{create_one::user_creator::UserCreator, delete_one::user_deleter::UserDeleter, find_one::user_finder::UserFinder, update_one::user_updater::UserUpdater},
     infrastructure::sqlx::sqlx_postgres_user_repository::SqlxPostgresUserRepository,
-};
+}};
 use v1::health::health_controller;
 
 use tracing::{self as logger};
@@ -60,6 +60,9 @@ async fn main() -> std::io::Result<()> {
     let crypto_key_finder = CryptoKeyFinder::new(crypto_key_repository_ref.clone());
     let crypto_key_finder_ref = Data::new(crypto_key_finder);
 
+    let crypto_keys_by_user_finder = CryptoKeysByUserFinder::new(crypto_key_repository_ref.clone());
+    let crypto_keys_by_user_finder_ref = Data::new(crypto_keys_by_user_finder);
+
     let crypto_key_creator = CryptoKeyCreator::new(crypto_key_repository_ref.clone(), event_bus_ref.clone());
     let crypto_key_creator_ref = Data::new(crypto_key_creator);
 
@@ -82,6 +85,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(user_deleter_ref.clone())
 
             .app_data(crypto_key_finder_ref.clone())
+            .app_data(crypto_keys_by_user_finder_ref.clone())
             .app_data(crypto_key_creator_ref.clone())
 
             .configure(v1::users::router::<SqlxPostgresUserRepository, InMemoryEventBus>)
