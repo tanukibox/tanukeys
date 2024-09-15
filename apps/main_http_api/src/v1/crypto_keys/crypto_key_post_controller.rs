@@ -22,13 +22,14 @@ pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
         return HttpResponse::Unauthorized().finish();
     }
     let auth_user = auth_user.unwrap();
+
     let key = parse_to_domain(&dto);
     if key.is_err() {
         return HttpResponse::BadRequest().finish();
     }
     let key = key.unwrap();
 
-    let res = creator.run(key.id, key.name, key.payload, key.user_id, auth_user).await;
+    let res = creator.run(key.id, key.name, key.payload, key.user_id, key.description, auth_user).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

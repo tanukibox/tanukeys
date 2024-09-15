@@ -1,5 +1,6 @@
 use sqlx::FromRow;
 use crate::crypto_keys::domain::entities::crypto_key::CryptoKey;
+use crate::crypto_keys::domain::entities::crypto_key_description::CryptoKeyDescription;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
@@ -11,6 +12,7 @@ pub struct SqlxCryptoKey {
     pub name: String,
     pub payload: String,
     pub user_id: String,
+    pub description: String,
 }
 
 impl SqlxCryptoKey {
@@ -20,6 +22,7 @@ impl SqlxCryptoKey {
             CryptoKeyName::new(self.name).unwrap(),
             CryptoKeyPayload::new(self.payload).unwrap(),
             UserId::new(self.user_id).unwrap(),
+            CryptoKeyDescription::new(self.description).unwrap(),
         )
     }
 
@@ -29,6 +32,7 @@ impl SqlxCryptoKey {
             name: key.name.value(),
             payload: key.payload.value(),
             user_id: key.user_id.value(),
+            description: key.description.value(),
         }
     }
 }
