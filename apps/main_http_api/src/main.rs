@@ -66,7 +66,16 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
         logger::info!("Thread {} started.", thread_counter);
+
+        let cors = actix_cors::Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header()
+            .max_age(3600);
+
         App::new()
+            .wrap(cors)
+            
             .app_data(user_finder_ref.clone())
             .app_data(user_creator_ref.clone())
             .app_data(user_updater_ref.clone())
