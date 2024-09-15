@@ -5,11 +5,9 @@ use actix_web::{
 use events::domain::event_bus::EventBus;
 use kernel::shared::domain::entities::user_id::UserId;
 use kernel::shared::domain::errors::DomainError;
+use kernel::users::infrastructure::dtos::json::user_dto::parse_to_domain;
 use kernel::users::{
-    application::update_one::user_updater::UserUpdater, domain::{
-        entities::user_name::UserName,
-        user_repository::UserRepository,
-    }, infrastructure::dtos::json::user_dto::UserDto
+    application::update_one::user_updater::UserUpdater, domain::user_repository::UserRepository, infrastructure::dtos::json::user_dto::UserDto
 };
 
 pub(crate) async fn controller<R: UserRepository, E: EventBus>(
@@ -27,16 +25,13 @@ pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     }
     let auth_user = auth_user.unwrap();
 
-    let user_id = UserId::new(dto.id.clone());
-    if user_id.is_err() {
-        return HttpResponse::BadRequest().finish()
+    let user = parse_to_domain(&dto);
+    if user.is_err() {
+        return HttpResponse::BadRequest().body(user.err().unwrap().to_string());
     }
-    let user_name = UserName::new(dto.name.clone());
-    if user_name.is_err() {
-        return HttpResponse::BadRequest().finish()
-    }
+    let user = user.unwrap();
 
-    let res = updater.run(user_id.unwrap(), user_name.unwrap(), auth_user).await;
+    let res = updater.run(user.id, user.name, user.bio, auth_user).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

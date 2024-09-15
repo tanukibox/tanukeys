@@ -1,5 +1,6 @@
 use crate::shared::domain::entities::user_id;
 use crate::shared::domain::types::DynError;
+use crate::users::domain::entities::user_bio;
 use crate::users::domain::entities::{user::User, user_name};
 use serde::{Deserialize, Serialize};
 
@@ -7,12 +8,14 @@ use serde::{Deserialize, Serialize};
 pub struct UserDto {
     pub id: String,
     pub name: String,
+    pub bio: Option<String>,
 }
 
 pub fn parse_to_dto(user: &User) -> UserDto {
     UserDto {
         id: user.id.value(),
         name: user.name.value(),
+        bio: user.bio.value(),
     }
 }
 
@@ -27,5 +30,10 @@ pub fn parse_to_domain(dto: &UserDto) -> Result<User, DynError> {
         return Err(user_name.err().unwrap());
     }
     let user_name = user_name.unwrap();
-    Ok(User::new(user_id, user_name))
+    let user_bio = user_bio::UserBio::new(dto.bio.clone());
+    if user_bio.is_err() {
+        return Err(user_bio.err().unwrap());
+    }
+    let user_bio = user_bio.unwrap();
+    Ok(User::new(user_id, user_name, user_bio))
 }

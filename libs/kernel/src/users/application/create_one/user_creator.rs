@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use crate::shared::domain::entities::user_id::UserId;
 use crate::shared::domain::errors::DomainError;
+use crate::users::domain::entities::user_bio::UserBio;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName}, events::user_created_event::UserCreatedEvent, user_repository::UserRepository
 };
@@ -19,13 +20,13 @@ impl<R: UserRepository, E: EventBus> UserCreator<R, E> {
         UserCreator { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId, name: UserName, logged_user: UserId) -> Result<(), DomainError> {
+    pub async fn run(&self, id: UserId, name: UserName, bio: UserBio, logged_user: UserId) -> Result<(), DomainError> {
         debug!("Starting user creation");
         if id != logged_user {
             debug!("User not authorized to create user with id: {}", id.value());
             return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
         }
-        let user = User::new(id.clone(), name);
+        let user = User::new(id.clone(), name, bio);
         let res = self.user_repository.create_one(&user).await;
         if res.is_err() {
             debug!("Error creating user with id: {}", id.value());

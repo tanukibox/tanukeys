@@ -1,5 +1,6 @@
 use crate::shared::domain::entities::user_id::UserId;
 use crate::shared::domain::errors::DomainError;
+use crate::users::domain::entities::user_bio::UserBio;
 use crate::users::domain::events::user_updated_event::UserUpdatedEvent;
 use crate::users::domain::{
     entities::{user::User, user_name::UserName},
@@ -19,7 +20,7 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
         UserUpdater { user_repository, event_bus }
     }
 
-    pub async fn run(&self, id: UserId, name: UserName, logged_user: UserId) -> Result<(), DomainError> {
+    pub async fn run(&self, id: UserId, name: UserName, bio: UserBio, logged_user: UserId) -> Result<(), DomainError> {
         debug!("Starting user update");
         if id != logged_user {
             return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
@@ -30,7 +31,7 @@ impl<R: UserRepository, E: EventBus> UserUpdater<R, E> {
         }
         let stored_user = res?;
 
-        let user = User::new(id, name);
+        let user = User::new(id, name, bio);
         let res = self.user_repository.update_one(&user).await;
         if res.is_err() {
             return Err(res.err().unwrap());

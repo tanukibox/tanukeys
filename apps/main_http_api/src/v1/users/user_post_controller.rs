@@ -5,12 +5,10 @@ use actix_web::{
 use events::domain::event_bus::EventBus;
 use kernel::shared::domain::entities::user_id::UserId;
 use kernel::shared::domain::errors::DomainError;
+use kernel::users::infrastructure::dtos::json::user_dto::parse_to_domain;
 use kernel::users::{
     application::create_one::user_creator::UserCreator,
-    domain::{
-        entities::user_name::UserName,
-        user_repository::UserRepository,
-    },
+    domain::user_repository::UserRepository,
     infrastructure::dtos::json::user_dto::UserDto,
 };
 
@@ -28,16 +26,14 @@ pub(crate) async fn controller<R: UserRepository, E: EventBus>(
         return HttpResponse::Unauthorized().finish();
     }
     let auth_user = auth_user.unwrap();
-    let user_id = UserId::new(dto.id.clone());
-    if user_id.is_err() {
-        return HttpResponse::BadRequest().finish()
+    
+    let user = parse_to_domain(&dto);
+    if user.is_err() {
+        return HttpResponse::BadRequest().body(user.err().unwrap().to_string());
     }
-    let user_name = UserName::new(dto.name.clone());
-    if user_name.is_err() {
-        return HttpResponse::BadRequest().finish()
-    }
+    let user = user.unwrap();
 
-    let res = creator.run(user_id.unwrap(), user_name.unwrap(), auth_user).await;
+    let res = creator.run(user.id, user.name, user.bio, auth_user).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

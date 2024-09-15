@@ -1,4 +1,5 @@
 use crate::shared::domain::entities::user_id::UserId;
+use crate::users::domain::entities::user_bio::UserBio;
 use crate::users::domain::entities::{user::User, user_name::UserName};
 use sqlx::prelude::FromRow;
 
@@ -7,6 +8,7 @@ use sqlx::prelude::FromRow;
 pub struct SqlxUser {   
     pub id: String,
     pub name: String,
+    pub bio: Option<String>,
 }
 
 impl SqlxUser {
@@ -14,6 +16,7 @@ impl SqlxUser {
         User::new(
             UserId::new(self.id).unwrap(),
             UserName::new(self.name).unwrap(),
+            UserBio::new(self.bio).unwrap(),
         )
     }
 
@@ -21,6 +24,7 @@ impl SqlxUser {
         Self {
             id: user.id.value(),
             name: user.name.value(),
+            bio: user.bio.value(),
         }
     }
 }
