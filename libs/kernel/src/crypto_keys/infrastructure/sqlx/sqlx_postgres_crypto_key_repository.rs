@@ -37,6 +37,23 @@ impl SqlxPostgresCryptoKeyRepository {
 
 #[async_trait]
 impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
+
+    async fn find_many(&self, user_id: &UserId) -> Result<Vec<CryptoKey>, DomainError> {
+        let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE user_id = $1")
+            .bind(user_id.value());
+        let keys_res: Result<Vec<SqlxCryptoKey>, sqlx::Error> = query.fetch_all(&self.pool).await;
+        if keys_res.is_err() {
+            return match keys_res.err().unwrap() {
+                sqlx::Error::RowNotFound => Ok(Vec::new()),
+                err => {
+                    error!("Error: {:?}", err);
+                    Err(DomainError::Unknown)
+                }
+            }
+        }
+        Ok(keys_res.unwrap().iter().map(|key| key.clone().to_domain()).collect())
+    }
+
     async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, DomainError> {
         let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE id = $1 AND user_id = $2")
             .bind(id.value())

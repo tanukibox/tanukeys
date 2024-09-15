@@ -6,7 +6,7 @@ use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
 use crate::shared::domain::entities::user_id::UserId;
 
-#[derive(Debug, FromRow)]
+#[derive(Debug, FromRow, Clone)]
 pub struct SqlxCryptoKey {
     pub id: String,
     pub name: String,
