@@ -39,7 +39,7 @@ impl SqlxPostgresCryptoKeyRepository {
 impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
     async fn find_many(&self, user_id: &UserId) -> Result<Vec<CryptoKey>, DomainError> {
-        let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE user_id = $1")
+        let query = sqlx::query_as("SELECT id, name, payload, user_id, description FROM cryptokeys WHERE user_id = $1")
             .bind(user_id.value());
         let keys_res: Result<Vec<SqlxCryptoKey>, sqlx::Error> = query.fetch_all(&self.pool).await;
         if keys_res.is_err() {
@@ -55,7 +55,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
     }
 
     async fn find_by_id(&self, user_id: &UserId, id: &CryptoKeyId) -> Result<CryptoKey, DomainError> {
-        let query = sqlx::query_as("SELECT id, name, payload, user_id FROM cryptokeys WHERE id = $1 AND user_id = $2")
+        let query = sqlx::query_as("SELECT id, name, payload, user_id, description FROM cryptokeys WHERE id = $1 AND user_id = $2")
             .bind(id.value())
             .bind(user_id.value());
         let key_res: Result<SqlxCryptoKey, sqlx::Error> = query.fetch_one(&self.pool).await;
@@ -73,11 +73,12 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
     async fn create_one(&self, key: &CryptoKey) -> Result<(), DomainError> {
         let sql_user: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
-        let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, user_id) VALUES ($1, $2, $3, $4)")
+        let res = sqlx::query("INSERT INTO cryptokeys (id, name, payload, user_id, description) VALUES ($1, $2, $3, $4, $5)")
             .bind(&sql_user.id)
             .bind(&sql_user.name)
             .bind(&sql_user.payload)
             .bind(&sql_user.user_id)
+            .bind(&sql_user.description)
             .fetch_optional(&self.pool)
             .await;
         if res.is_err() { // TODO: check sql error code or message
@@ -94,7 +95,7 @@ impl CryptoKeyRepository for SqlxPostgresCryptoKeyRepository {
 
     async fn update_one(&self, key: &CryptoKey) -> Result<(), DomainError> {
         let sql_key: SqlxCryptoKey = SqlxCryptoKey::from_domain(key);
-        let res = sqlx::query("UPDATE kernel.cryptokey SET name = $1, payload = $2 WHERE id = $3 and user_id = $4")
+        let res = sqlx::query("UPDATE kernel.cryptokey SET name = $1, payload = $2, WHERE id = $3 and user_id = $4")
             .bind(&sql_key.name)
             .bind(&sql_key.payload)
             .bind(&sql_key.id)
