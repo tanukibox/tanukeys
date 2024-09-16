@@ -1,5 +1,5 @@
 [workspace]
 members = [
     "libs/kernel",
-    "apps/main_http_api"
+    "apps/tanukeys"
 ]
