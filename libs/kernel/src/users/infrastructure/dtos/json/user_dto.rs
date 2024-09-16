@@ -1,5 +1,5 @@
 use crate::shared::domain::entities::user_id;
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use crate::users::domain::entities::user_bio;
 use crate::users::domain::entities::{user::User, user_name};
 use serde::{Deserialize, Serialize};
@@ -19,7 +19,7 @@ pub fn parse_to_dto(user: &User) -> UserDto {
     }
 }
 
-pub fn parse_to_domain(dto: &UserDto) -> Result<User, DynError> {
+pub fn parse_to_domain(dto: &UserDto) -> Result<User, DomainError> {
     let user_id = user_id::UserId::new(dto.id.clone());
     if user_id.is_err() {
         return Err(user_id.err().unwrap());

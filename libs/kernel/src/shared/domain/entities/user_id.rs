@@ -1,4 +1,4 @@
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -7,7 +7,10 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn new(id: String) -> Result<Self, DynError> {
+    pub fn new(id: String) -> Result<Self, DomainError> {
+        if id.contains(" ") {
+            return Err(DomainError::ValueObjectError { value: "User id must not contain blank spaces".to_string() })
+        }
         Ok(Self { value: id })
     }
 

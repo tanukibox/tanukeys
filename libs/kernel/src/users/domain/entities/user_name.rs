@@ -1,11 +1,11 @@
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 
 pub struct UserName {
     value: String,
 }
 
 impl UserName {
-    pub fn new(value: String) -> Result<UserName, DynError> {
+    pub fn new(value: String) -> Result<UserName, DomainError> {
         Ok(Self { value })
     }
 

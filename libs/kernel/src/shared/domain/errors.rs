@@ -10,6 +10,9 @@ pub enum DomainError {
     #[error("Unknown error.")]
     Unknown,
 
+    #[error("Not valid format for value <{value:?}>.")]
+    ValueObjectError { value: String },
+
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     //                     USER ERRORS
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - -

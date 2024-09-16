@@ -1,4 +1,4 @@
-use crate::shared::domain::types::DynError;
+use crate::shared::domain::errors::DomainError;
 use std::hash::{Hash, Hasher};
 
 #[derive(Debug)]
@@ -7,7 +7,7 @@ pub struct CryptoKeyName {
 }
 
 impl CryptoKeyName {
-    pub fn new(val: String) -> Result<Self, DynError> {
+    pub fn new(val: String) -> Result<Self, DomainError> {
         Ok(Self { value: val })
     }
 
