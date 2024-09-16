@@ -12,4 +12,4 @@ WORKDIR /app
 RUN apk add --no-cache libgcc
 COPY --from=builder /app/target/release/main_http_api .
 
-CMD ["./main_http_api"]
+CMD ["./tanukeys"]
