@@ -8,6 +8,13 @@ pub struct CryptoKeyId {
 
 impl CryptoKeyId {
     pub fn new(id: String) -> Result<Self, DomainError> {
+        if id.contains(" ") {
+            return Err(DomainError::ValueObjectError { value: "Cryptokey id must not contain blank spaces".to_string() })
+        }
+        let contains_upper = id.chars().any(|c| c.is_uppercase());
+        if contains_upper {
+            return Err(DomainError::ValueObjectError { value: "Cryptokey id must not contain uppercase characters".to_string() })
+        }
         Ok(Self { value: id })
     }
 
