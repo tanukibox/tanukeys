@@ -3,11 +3,28 @@ services:
 
   postgres:
     image: 'postgres:latest'
+    container_name: postgres
     ports:
       - 5432:5432
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
-
     volumes:
         - ./.data/docker/postgres/data:/var/lib/postgresql/data/
+    networks:
+      - postgres_net
+
+
+  tanukeys:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tanukeys_api
+    networks:
+      - postgres_net
+      - proxy_net
+
+networks:
+  postgres_net:
+  proxy_net:
+    

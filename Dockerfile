@@ -6,10 +6,13 @@ COPY . .
 RUN cargo build --release
 
 # Runtime stage
-FROM alpine:latest
+FROM rust:1.80
 
 WORKDIR /app
-RUN apk add --no-cache libgcc
-COPY --from=builder /app/target/release/main_http_api .
+COPY --from=builder /app/target/release/tanukeys /app/
+
+ENV PORT=3030 \
+    RUST_LOG=main_http_api=trace,kernel=trace \
+    DATABASE_URL=postgres://root:root@postgres:5432/tanukeys
 
 CMD ["./tanukeys"]
