@@ -1,4 +1,3 @@
-# Build stage
 FROM rust:1.80
 
 WORKDIR /app
