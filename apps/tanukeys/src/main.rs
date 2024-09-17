@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
         .with_timer(tracing_subscriber::fmt::time::ChronoUtc::rfc3339())
         .init();
 
-    let host = "127.0.0.1";
+    let host = "0.0.0.0";
     let port = std::env::var("PORT").expect("PORT must be set");
     let address = format!("{}:{}", host, port);
     logger::info!("Starting server at http://{}:{}/.", host, port);

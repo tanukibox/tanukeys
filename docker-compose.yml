@@ -12,19 +12,34 @@ services:
     volumes:
         - ./.data/docker/postgres/data:/var/lib/postgresql/data/
     networks:
-      - postgres_net
+      - postgres-net
 
-
-  tanukeys:
+  tanukeys-api:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: tanukeys_api
+    container_name: tanukeys-api
     networks:
-      - postgres_net
-      - proxy_net
+      - postgres-net
+      - proxy-net
+    ports:
+      - 3030:3030
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    volumes:
+      - .data/docker/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - .data/docker/caddy/data:/data
+      - .data/docker/caddy/config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    networks:
+      - proxy-net
 
 networks:
-  postgres_net:
-  proxy_net:
+  postgres-net:
+  proxy-net:
     
