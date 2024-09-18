@@ -26,3 +26,11 @@ dev/deps:
 .PHONY: format
 format:
 	cargo fmt
+
+.PHONY: docker/build
+docker/build:
+	docker build -t tanukeys-api .
+
+.PHONY: docker/clean
+docker/clean:
+	docker rmi tanukeys-tanukeys-api
