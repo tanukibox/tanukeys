@@ -2,7 +2,7 @@
 ############## Build stage ##############
 #########################################
 
-FROM rust:1.80 as builder
+FROM rust:1.80 AS builder
 
 WORKDIR /app
 COPY . .
@@ -12,13 +12,14 @@ RUN cargo build --release
 ############## Runtime stage #############
 ##########################################
 
-FROM debian:11-slim
+FROM rust:1.80-slim
+
+RUN apt-get update
+RUN apt-get install -y ca-certificates
+RUN rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY --from=builder /app/target/release/tanukeys /app/
-
-RUN apt update
-RUN apt install libc6
 
 ENV PORT=3030 \
     RUST_LOG=main_http_api=trace,kernel=trace \
