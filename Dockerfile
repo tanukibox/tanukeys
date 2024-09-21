@@ -26,4 +26,3 @@ ENV PORT=3030 \
     DATABASE_URL=postgres://root:root@postgres:5432/tanukeys
 
 CMD ["./tanukeys"]
-
