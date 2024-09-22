@@ -23,10 +23,6 @@ impl UserBioMother {
         UserBio::new(random_str).unwrap()
     }
 
-    pub fn create(value: Option<String>) -> UserBio {
-        UserBio::new(value).unwrap()
-    }
-
     pub fn with_params(value: Option<Option<String>>) -> UserBio {
         match value {
             Some(value) => UserBio::new(value).unwrap(),
