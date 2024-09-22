@@ -24,8 +24,6 @@ services:
     networks:
       - postgres-net
       - proxy-net
-    ports:
-      - 3030:3030
 
   caddy:
     image: caddy:latest
