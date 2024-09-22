@@ -3,9 +3,9 @@ use uuid::Uuid;
 use crate::shared::domain::entities::user_id::UserId;
 
 
-pub struct UserIdModer {}
+pub struct UserIdMother {}
 
-impl UserIdModer {
+impl UserIdMother {
     pub fn random() -> UserId {
         UserId::new(Uuid::new_v4().to_string()).unwrap()
     }

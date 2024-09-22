@@ -5,9 +5,9 @@ use rand::Rng;
 use crate::users::domain::entities::user_bio::UserBio;
 
 
-pub struct UserBioModer {}
+pub struct UserBioMother {}
 
-impl UserBioModer {
+impl UserBioMother {
     pub fn random() -> UserBio {
         let name_size = rand::thread_rng().gen_range(0..150);
         if name_size == 0 {
@@ -27,9 +27,9 @@ impl UserBioModer {
         UserBio::new(value).unwrap()
     }
 
-    pub fn with_params(value: Option<String>) -> UserBio {
+    pub fn with_params(value: Option<Option<String>>) -> UserBio {
         match value {
-            Some(_) => UserBio::new(value).unwrap(),
+            Some(value) => UserBio::new(value).unwrap(),
             None => Self::random(),
         }
     }
