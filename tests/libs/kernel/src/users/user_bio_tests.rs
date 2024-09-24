@@ -22,4 +22,25 @@ pub mod user_bio {
         assert!(res.is_ok())
     }
 
+    #[test]
+    fn create_japanese_bio() {
+        let bio_str = Some("こんにちは".to_string());
+        let res = UserBio::new(bio_str);
+        assert!(res.is_ok())
+    }
+
+    #[test]
+    fn create_chinese_bio() {
+        let bio_str = Some("你好".to_string());
+        let res = UserBio::new(bio_str);
+        assert!(res.is_ok())
+    }
+
+    #[test]
+    fn create_arabic_bio() {
+        let bio_str = Some("مرحبا".to_string());
+        let res = UserBio::new(bio_str);
+        assert!(res.is_ok())
+    }
+
 }
