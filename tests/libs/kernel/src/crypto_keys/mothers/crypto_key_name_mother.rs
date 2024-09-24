@@ -1,25 +1,26 @@
 use std::iter;
 
+use kernel::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use rand::Rng;
 
-use crate::users::domain::entities::user_name::UserName;
 
 
-pub struct UserNameMother {}
 
-impl UserNameMother {
-    pub fn random() -> UserName {
+pub struct CryptoKeyNameMother {}
+
+impl CryptoKeyNameMother {
+    pub fn random() -> CryptoKeyName {
         const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz";
         let mut rng = rand::thread_rng();
         let gen_one_char = || CHARSET[rng.gen_range(0..CHARSET.len())] as char;
         let name_size = rand::thread_rng().gen_range(5..15);
         let random_str: String = iter::repeat_with(gen_one_char).take(name_size).collect();
-        UserName::new(random_str).unwrap()
+        CryptoKeyName::new(random_str).unwrap()
     }
 
-    pub fn with_params(value: Option<String>) -> UserName {
+    pub fn with_params(value: Option<String>) -> CryptoKeyName {
         match value {
-            Some(value) => UserName::new(value).unwrap(),
+            Some(value) => CryptoKeyName::new(value).unwrap(),
             None => Self::random(),
         }
     }

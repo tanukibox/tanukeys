@@ -1,4 +1,5 @@
-use crate::users::domain::entities::user::User;
+
+use kernel::users::domain::entities::user::User;
 
 use super::{user_bio_mother::UserBioMother, user_id_mother::UserIdMother, user_name_mother::UserNameMother};
 

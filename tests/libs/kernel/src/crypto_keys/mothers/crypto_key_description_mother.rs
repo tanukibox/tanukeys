@@ -1,8 +1,8 @@
 use std::iter;
 
+use kernel::crypto_keys::domain::entities::crypto_key_description::CryptoKeyDescription;
 use rand::Rng;
 
-use crate::crypto_keys::domain::entities::crypto_key_description::CryptoKeyDescription;
 
 
 pub struct CryptoKeyDescriptionMother {}

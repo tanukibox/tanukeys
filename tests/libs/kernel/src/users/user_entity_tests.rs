@@ -1,9 +1,7 @@
-pub mod mothers;
-
 #[cfg(test)]
-mod create_simple_user {
+pub mod create_user_entity {
+    use crate::users::mothers::user_mother::UserMother;
 
-    use super::mothers::user_mother::UserMother;
 
     #[test]
     fn create_simple_user() {

@@ -1,8 +1,8 @@
 use std::iter;
 
+use kernel::users::domain::entities::user_bio::UserBio;
 use rand::Rng;
 
-use crate::users::domain::entities::user_bio::UserBio;
 
 
 pub struct UserBioMother {}

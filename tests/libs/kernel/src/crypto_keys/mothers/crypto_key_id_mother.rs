@@ -1,6 +1,6 @@
+use kernel::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use uuid::Uuid;
 
-use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 
 
 pub struct CryptoKeyIdMother {}

@@ -1,6 +1,6 @@
+use kernel::shared::domain::entities::user_id::UserId;
 use uuid::Uuid;
 
-use crate::shared::domain::entities::user_id::UserId;
 
 
 pub struct UserIdMother {}
