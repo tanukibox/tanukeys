@@ -1,5 +1,6 @@
 #[cfg(test)]
-pub mod create_user_entity {
+pub mod user_entity {
+
     use crate::users::mothers::user_mother::UserMother;
 
 
@@ -7,4 +8,5 @@ pub mod create_user_entity {
     fn create_simple_user() {
         UserMother::random();
     }
+
 }
