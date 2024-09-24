@@ -18,6 +18,11 @@ impl UserId {
         if contains_upper {
             return Err(DomainError::ValueObjectError { value: "User id must not contain uppercase characters".to_string() })
         }
+        const ALLOWED_CHARS: &str = "abcdefghijklmnopqrstuvwxyz0123456789_.-";
+        let contains_not_alloweed_char = id.chars().any(|c| !ALLOWED_CHARS.contains(c));
+        if contains_not_alloweed_char {
+            return Err(DomainError::ValueObjectError { value: "User id must contain only alphanumeric characters or <-._>.".to_string() })
+        }
         Ok(Self { value: id })
     }
 
