@@ -8,6 +8,9 @@ pub struct UserId {
 
 impl UserId {
     pub fn new(id: String) -> Result<Self, DomainError> {
+        if id == "" {
+            return Err(DomainError::ValueObjectError { value: "User id must not be empty".to_string() })
+        }
         if id.contains(" ") {
             return Err(DomainError::ValueObjectError { value: "User id must not contain blank spaces".to_string() })
         }
