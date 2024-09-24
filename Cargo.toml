@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "libs/kernel",
     "apps/tanukeys",
     "tests/libs/kernel"
 ]
