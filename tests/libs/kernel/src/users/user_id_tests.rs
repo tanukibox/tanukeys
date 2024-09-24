@@ -1,9 +1,9 @@
 #[cfg(test)]
 pub mod user_id {
+
     use kernel::shared::domain::entities::user_id::UserId;
 
     use crate::users::mothers::user_id_mother::UserIdMother;
-
 
     #[test]
     fn create_random_valid_id() {
@@ -47,8 +47,32 @@ pub mod user_id {
     }
 
     #[test]
+    fn create_with_just_not_allowed_char() {
+        let res = UserId::new(";".to_string());
+        assert!(res.is_err())
+    }
+
+    #[test]
     fn create_with_not_allowed_char() {
         let res = UserId::new("tanuki;box".to_string());
+        assert!(res.is_err())
+    }
+
+    #[test]
+    fn create_just_with_space_char() {
+        let res = UserId::new(" ".to_string());
+        assert!(res.is_err())
+    }
+
+    #[test]
+    fn create_with_space_char() {
+        let res = UserId::new("tanuki box".to_string());
+        assert!(res.is_err())
+    }
+
+    #[test]
+    fn create_with_some_not_allowed_char() {
+        let res = UserId::new("tanuki box!".to_string());
         assert!(res.is_err())
     }
 
