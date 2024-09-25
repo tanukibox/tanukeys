@@ -38,4 +38,4 @@ docker/build:
 
 .PHONY: docker/clean
 docker/clean:
-	docker rmi tanukeys-tanukeys-api
+	docker rmi tanukeys-api
