@@ -6,6 +6,11 @@ pub struct UserBio {
 
 impl UserBio {
     pub fn new(value: Option<String>) -> Result<UserBio, DomainError> {
+        if let Some(value) = value.clone() {
+            if value.len() > 600 {
+                return Err(DomainError::ValueObjectError { value: "User bio cannot be longer than 600 characters".to_string() });
+            }
+        }
         Ok(Self { value })
     }
 

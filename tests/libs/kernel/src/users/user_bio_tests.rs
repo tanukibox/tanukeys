@@ -50,4 +50,11 @@ pub mod user_bio {
         assert!(res.is_ok())
     }
 
+    #[test]
+    fn create_bio_with_more_than_600_chars() {
+        let bio_str = Some("a".repeat(601));
+        let res = UserBio::new(bio_str);
+        assert!(res.is_err())
+    }
+
 }
