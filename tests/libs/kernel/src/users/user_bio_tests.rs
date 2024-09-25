@@ -30,6 +30,13 @@ pub mod user_bio {
     }
 
     #[test]
+    fn create_corean_bio() {
+        let bio_str = Some("안녕하세요".to_string());
+        let res = UserBio::new(bio_str);
+        assert!(res.is_ok())
+    }
+
+    #[test]
     fn create_chinese_bio() {
         let bio_str = Some("你好".to_string());
         let res = UserBio::new(bio_str);
