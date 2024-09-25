@@ -21,8 +21,6 @@ build:
 security:
   stage: security
   image: rust:1.80
-  before_script:
-    - cargo install cargo-audit || echo "cargo-audit already installed"
   script:
-    - cargo audit
+    - make audit
   allow_failure: true

@@ -14,6 +14,11 @@ dev/build: dev/deps
 run:
 	cargo run
 
+.PHONY: audit
+audit:
+	cargo install cargo-audit || echo "cargo-audit already installed"
+	cargo audit
+
 .PHONY: deps
 deps:
 	cargo update
