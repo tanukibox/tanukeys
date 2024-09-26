@@ -17,3 +17,4 @@ sqlx = { version = "0.8.2", features = [ "postgres", "runtime-tokio" ] }
 serde = { version = "1.0.200", features = ["derive"] }
 aggregate_root = { path = "../shared/aggregate_root" }
 events = { path = "../shared/events" }
+cqrs = { path = "../shared/cqrs" }
