@@ -6,3 +6,4 @@ pub mod query_bus_response;
 pub mod command;
 pub mod command_bus;
 pub mod command_handler;
+pub mod command_bus_response;
