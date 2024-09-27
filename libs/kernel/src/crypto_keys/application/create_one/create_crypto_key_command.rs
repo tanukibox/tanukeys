@@ -2,16 +2,18 @@ use cqrs::domain::command::Command;
 
 
 pub struct CreateCryptoKeyCommand {
-    pub id: String,
-    pub name: String,
-    pub payload: String,
-    pub user_id: String,
-    pub description: String,
-    pub logged_user: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub payload: Option<String>,
+    pub user_id: Option<String>,
+    pub description: Option<String>,
+    pub logged_user: Option<String>,
 }
 
 impl CreateCryptoKeyCommand {
-    pub fn new(id: String, name: String, payload: String, user_id: String, description: String, logged_user: String) -> CreateCryptoKeyCommand {
+    pub fn new(id: Option<String>, name: Option<String>, payload: Option<String>, user_id: Option<String>, description: Option<String>, 
+        logged_user: Option<String>) -> CreateCryptoKeyCommand {
+            
         CreateCryptoKeyCommand { id, name, payload, user_id, description, logged_user }
     }
 }
