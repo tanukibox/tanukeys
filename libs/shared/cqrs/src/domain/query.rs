@@ -1,4 +1,4 @@
 
 pub trait Query {
-    fn query_type(&self) -> String;
+    fn get_type(&self) -> String;
 }
