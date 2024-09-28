@@ -6,6 +6,8 @@ pub struct FindCryptoKeysByUserQuery {
 }
 
 impl FindCryptoKeysByUserQuery {
+    pub const QUERY_TYPE: &'static str = "FindCryptoKeysByUserQuery";
+
     pub fn new(user_id: String) -> FindCryptoKeysByUserQuery {
         FindCryptoKeysByUserQuery { user_id }
     }
@@ -13,6 +15,6 @@ impl FindCryptoKeysByUserQuery {
 
 impl Query for FindCryptoKeysByUserQuery {
     fn get_type(&self) -> String {
-        "FindCryptoKeysByUserQuery".to_string()
+        FindCryptoKeysByUserQuery::QUERY_TYPE.to_string()
     }
 }
