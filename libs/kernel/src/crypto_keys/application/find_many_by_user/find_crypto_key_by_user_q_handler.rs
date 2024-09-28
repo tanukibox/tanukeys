@@ -7,12 +7,12 @@ use super::{crypto_keys_by_user_finder::CryptoKeysByUserFinder, find_crypto_keys
 
 
 pub struct FindCryptoKeysByUserQueryHandler<R: CryptoKeyRepository> {
-    crypto_keys_by_user_finder: CryptoKeysByUserFinder<R>,
+    _crypto_keys_by_user_finder: CryptoKeysByUserFinder<R>,
 }
 
 impl<R: CryptoKeyRepository> FindCryptoKeysByUserQueryHandler<R> {
     pub fn new(crypto_keys_by_user_finder: CryptoKeysByUserFinder<R>) -> FindCryptoKeysByUserQueryHandler<R> {
-        FindCryptoKeysByUserQueryHandler { crypto_keys_by_user_finder }
+        FindCryptoKeysByUserQueryHandler { _crypto_keys_by_user_finder: crypto_keys_by_user_finder }
     }
 }
 
