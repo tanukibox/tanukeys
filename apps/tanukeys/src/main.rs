@@ -22,7 +22,7 @@ pub mod v1;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::from_path("./apps/main_http_api/.env").ok();
+    dotenv::from_path("./apps/tanukeys/.env").ok();
 
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
@@ -71,7 +71,7 @@ async fn main() -> std::io::Result<()> {
     let crypto_key_creator = CryptoKeyCreator::new(crypto_key_repository_ref.clone(), event_bus_ref.clone());
     let crypto_key_creator_ref = Data::new(crypto_key_creator);
 
-    let query_bus_ref = Data::new(query_bus);
+    let query_bus_ref: Data<Arc<dyn QueryBus>> = Data::new(Arc::new(query_bus));
 
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
