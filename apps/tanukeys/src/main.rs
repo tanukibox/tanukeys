@@ -5,9 +5,9 @@ use std::sync::{
 
 use actix_web::{web::Data, App, HttpServer};
 
-use cqrs::{domain::{query, query_bus::{self, QueryBus}}, infrastructure::inmemory::inmemory_query_bus::InMemoryQueryBus};
+use cqrs::{domain::query_bus::QueryBus, infrastructure::inmemory::inmemory_query_bus::InMemoryQueryBus};
 use events::infrastructure::inmemory::inmemory_event_bus::InMemoryEventBus;
-use kernel::{crypto_keys::application::find_many_by_user::{crypto_keys_by_user_finder::CryptoKeysByUserFinder, find_crypto_key_by_user_q_handler::FindCryptoKeysByUserQueryHandler, find_crypto_keys_by_user_query::FindCryptoKeysByUserQuery}, users::{
+use kernel::{crypto_keys::application::find_many_by_user::{crypto_keys_by_user_finder::CryptoKeysByUserFinder, find_crypto_key_by_user_q_handler::FindCryptoKeysByUserQueryHandler}, users::{
     application::{create_one::user_creator::UserCreator, delete_one::user_deleter::UserDeleter, find_one::user_finder::UserFinder, update_one::user_updater::UserUpdater},
     infrastructure::sqlx::sqlx_postgres_user_repository::SqlxPostgresUserRepository,
 }};
@@ -92,7 +92,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(user_deleter_ref.clone())
 
             .app_data(crypto_key_finder_ref.clone())
-            //.app_data(crypto_keys_by_user_finder_ref.clone())
             .app_data(crypto_key_creator_ref.clone())
 
             .app_data(query_bus_ref.clone())
