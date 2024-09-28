@@ -1,3 +1,4 @@
+use async_trait::async_trait;
 use cqrs::domain::{query::Query, query_bus_response::QueryBusResponse, query_handler::QueryHandler};
 
 use crate::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
@@ -15,8 +16,9 @@ impl<R: CryptoKeyRepository> FindCryptoKeysByUserQueryHandler<R> {
     }
 }
 
+#[async_trait]
 impl <R: CryptoKeyRepository> QueryHandler for FindCryptoKeysByUserQueryHandler<R> {
-    fn handle(&self, _query: Box<dyn Query>) -> Box<dyn QueryBusResponse> {
+    async fn handle(&self, _query: Box<dyn Query>) -> Box<dyn QueryBusResponse> {
         todo!()
     }
 

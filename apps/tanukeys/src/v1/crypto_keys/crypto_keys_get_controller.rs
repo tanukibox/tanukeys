@@ -1,10 +1,9 @@
 
 use actix_web::{web, HttpRequest, HttpResponse};
-use kernel::crypto_keys::application::find_many_by_user::crypto_keys_by_user_finder::CryptoKeysByUserFinder;
+use cqrs::domain::query_bus::QueryBus;
+use kernel::crypto_keys::application::find_many_by_user::find_crypto_keys_by_user_query::FindCryptoKeysByUserQuery;
 use serde::Deserialize;
 use kernel::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
-use kernel::crypto_keys::infrastructure::dtos::crypto_key_json_dto::parse_to_dto;
-use kernel::shared::domain::entities::user_id::UserId;
 
 #[derive(Debug, Deserialize)]
 pub struct Params {
@@ -13,26 +12,15 @@ pub struct Params {
 
 pub(crate) async fn controller<R: CryptoKeyRepository>(
     req: HttpRequest,
-    finder: web::Data<CryptoKeysByUserFinder<R>>,
+    //finder: web::Data<CryptoKeysByUserFinder<R>>,
+    query_bus: web::Data<dyn QueryBus>,
 ) -> HttpResponse {
     let params = web::Query::<Params>::from_query(req.query_string())
         .unwrap_or(web::Query(Params { user_id: String::from("") }));
     let user_id = params.user_id.clone();
-    let user_id = UserId::new(user_id.parse().unwrap());
-    if user_id.is_err() {
-        return HttpResponse::BadRequest().finish()
-    }
+    let query = FindCryptoKeysByUserQuery { user_id };
 
-    let res = finder.run(user_id.unwrap()).await;
-    match res {
-        Ok(keys) => {
-            let dtos: Vec<_> = keys.iter().map(|key| parse_to_dto(&key)).collect();
-            HttpResponse::Ok().json(dtos)
-        }
-        Err(err) => {
-            match err {
-                _ => HttpResponse::InternalServerError().finish()
-            }
-        }
-    }
+    let res = query_bus.ask(Box::new(query)).await;
+
+    todo!()
 }
