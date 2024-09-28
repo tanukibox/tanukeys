@@ -12,7 +12,6 @@ pub struct Params {
 
 pub(crate) async fn controller<R: CryptoKeyRepository>(
     req: HttpRequest,
-    //finder: web::Data<CryptoKeysByUserFinder<R>>,
     query_bus: web::Data<dyn QueryBus>,
 ) -> HttpResponse {
     let params = web::Query::<Params>::from_query(req.query_string())
@@ -20,7 +19,7 @@ pub(crate) async fn controller<R: CryptoKeyRepository>(
     let user_id = params.user_id.clone();
     let query = FindCryptoKeysByUserQuery { user_id };
 
-    let res = query_bus.ask(Box::new(query)).await;
+    let _res = query_bus.ask(Box::new(query)).await;
 
     todo!()
 }
