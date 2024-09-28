@@ -3,7 +3,7 @@ use std::{collections::HashMap, sync::Arc};
 use crate::domain::{query::Query, query_bus::QueryBus, query_bus_response::QueryBusResponse, query_handler::QueryHandler};
 
 
-pub struct InMemoryQueryBus<> {
+pub struct InMemoryQueryBus {
     handlers: HashMap<String, Arc<dyn QueryHandler>>,
 }
 

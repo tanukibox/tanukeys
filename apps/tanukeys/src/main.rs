@@ -5,7 +5,7 @@ use std::sync::{
 
 use actix_web::{web::Data, App, HttpServer};
 
-use cqrs::{domain::{query, query_bus::QueryBus}, infrastructure::inmemory::inmemory_query_bus::InMemoryQueryBus};
+use cqrs::{domain::{query, query_bus::{self, QueryBus}}, infrastructure::inmemory::inmemory_query_bus::InMemoryQueryBus};
 use events::infrastructure::inmemory::inmemory_event_bus::InMemoryEventBus;
 use kernel::{crypto_keys::application::find_many_by_user::{crypto_keys_by_user_finder::CryptoKeysByUserFinder, find_crypto_key_by_user_q_handler::FindCryptoKeysByUserQueryHandler, find_crypto_keys_by_user_query::FindCryptoKeysByUserQuery}, users::{
     application::{create_one::user_creator::UserCreator, delete_one::user_deleter::UserDeleter, find_one::user_finder::UserFinder, update_one::user_updater::UserUpdater},
@@ -41,7 +41,6 @@ async fn main() -> std::io::Result<()> {
     let event_bus_ref = Arc::new(event_bus);
 
     let mut query_bus = InMemoryQueryBus::new();
-    //let query_bus_ref = Arc::new(query_bus);
 
     let user_repository = SqlxPostgresUserRepository::from_env().await;
     let user_repository_ref = Arc::new(user_repository);
@@ -72,6 +71,8 @@ async fn main() -> std::io::Result<()> {
     let crypto_key_creator = CryptoKeyCreator::new(crypto_key_repository_ref.clone(), event_bus_ref.clone());
     let crypto_key_creator_ref = Data::new(crypto_key_creator);
 
+    let query_bus_ref = Data::new(query_bus);
+
     HttpServer::new(move || {
         let thread_counter = thread_counter.fetch_add(1, Ordering::SeqCst);
         logger::info!("Thread {} started.", thread_counter);
@@ -93,6 +94,8 @@ async fn main() -> std::io::Result<()> {
             .app_data(crypto_key_finder_ref.clone())
             //.app_data(crypto_keys_by_user_finder_ref.clone())
             .app_data(crypto_key_creator_ref.clone())
+
+            .app_data(query_bus_ref.clone())
 
             .configure(v1::users::router::<SqlxPostgresUserRepository, InMemoryEventBus>)
             .configure(v1::crypto_keys::router::<SqlxPostgresCryptoKeyRepository, InMemoryEventBus>)
