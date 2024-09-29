@@ -6,6 +6,7 @@ use kernel::shared::domain::errors::DomainError;
 
 pub fn parse_domain_error(error: &DomainError) -> HttpResponse {
     match error {
+        
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         //                    GENERAL ERRORS
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
