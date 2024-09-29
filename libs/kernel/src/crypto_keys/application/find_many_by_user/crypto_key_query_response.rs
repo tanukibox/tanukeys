@@ -7,14 +7,14 @@ use crate::{crypto_keys::domain::entities::crypto_key::CryptoKey, shared::domain
 
 pub struct CryptoKeyQueryResponse {
     pub data: Vec<CryptoKey>,
-    pub errors: Vec<DomainError>,
+    pub error: Option<DomainError>,
 }
 
 impl CryptoKeyQueryResponse {
     pub const RES_TYPE: &'static str = "CryptoKeyQueryResponse";
 
     pub fn entities(data: Vec<CryptoKey>) -> CryptoKeyQueryResponse {
-        CryptoKeyQueryResponse { data, errors: vec![] }
+        CryptoKeyQueryResponse { data, error: None }
     }
 
     pub fn boxed_entities(data: Vec<CryptoKey>) -> Box<CryptoKeyQueryResponse> {
@@ -23,7 +23,7 @@ impl CryptoKeyQueryResponse {
     }
 
     pub fn entity(data: CryptoKey) -> CryptoKeyQueryResponse {
-        CryptoKeyQueryResponse { data: vec![data], errors: vec![] }
+        CryptoKeyQueryResponse { data: vec![data], error: None }
     }
 
     pub fn boxed_entity(data: CryptoKey) -> Box<CryptoKeyQueryResponse> {
@@ -31,17 +31,8 @@ impl CryptoKeyQueryResponse {
         Box::new(res)
     }
 
-    pub fn errs(errors: Vec<DomainError>) -> CryptoKeyQueryResponse {
-        CryptoKeyQueryResponse { data: vec![], errors }
-    }
-
-    pub fn boxed_errs(errors: Vec<DomainError>) -> Box<CryptoKeyQueryResponse> {
-        let res = CryptoKeyQueryResponse::errs(errors);
-        Box::new(res)
-    }
-
     pub fn err(error: DomainError) -> CryptoKeyQueryResponse {
-        CryptoKeyQueryResponse { data: vec![], errors: vec![error] }
+        CryptoKeyQueryResponse { data: vec![], error: Some(error) }
     }
 
     pub fn boxed_err(error: DomainError) -> Box<CryptoKeyQueryResponse> {
@@ -53,5 +44,9 @@ impl CryptoKeyQueryResponse {
 impl QueryBusResponse for CryptoKeyQueryResponse {
     fn response_type(&self) -> String {
         Self::RES_TYPE.to_string()
+    }
+    
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
     }
 }
