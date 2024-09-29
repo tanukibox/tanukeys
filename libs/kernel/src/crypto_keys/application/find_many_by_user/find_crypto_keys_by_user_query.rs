@@ -1,3 +1,5 @@
+use std::any::Any;
+
 use cqrs::domain::query::Query;
 
 
@@ -16,5 +18,9 @@ impl FindCryptoKeysByUserQuery {
 impl Query for FindCryptoKeysByUserQuery {
     fn get_type(&self) -> String {
         FindCryptoKeysByUserQuery::QUERY_TYPE.to_string()
+    }
+    
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
