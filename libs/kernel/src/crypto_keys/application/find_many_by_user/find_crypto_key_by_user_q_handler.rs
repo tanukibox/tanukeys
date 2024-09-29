@@ -3,7 +3,7 @@ use std::ops::Deref;
 use async_trait::async_trait;
 use cqrs::domain::{query::Query, query_bus_response::QueryBusResponse, query_handler::QueryHandler};
 
-use crate::{crypto_keys::{application::find_many_by_user::crypto_key_query_response::CryptoKeyQueryResponse, domain::crypto_key_repository::CryptoKeyRepository}, shared::domain::entities::user_id::UserId};
+use crate::{crypto_keys::{application::find_many_by_user::crypto_key_query_response::CryptoKeyQueryResponse, domain::{crypto_key_repository::CryptoKeyRepository, entities::crypto_key::CryptoKey}}, shared::{application::entity_query_response::EntityQueryResponse, domain::entities::user_id::UserId}};
 
 use super::{crypto_keys_by_user_finder::CryptoKeysByUserFinder, find_crypto_keys_by_user_query::FindCryptoKeysByUserQuery};
 
@@ -32,7 +32,7 @@ impl <R: CryptoKeyRepository> QueryHandler for FindCryptoKeysByUserQueryHandler<
             return CryptoKeyQueryResponse::boxed_err(res.unwrap_err());
         }
         
-        CryptoKeyQueryResponse::boxed_entities(res.unwrap())
+        EntityQueryResponse::boxed_entities(res.unwrap())
     }
 
     fn subscribet_to(&self) -> String {
