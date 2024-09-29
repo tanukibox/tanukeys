@@ -6,6 +6,7 @@ use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 
 use super::crypto_key_description::CryptoKeyDescription;
 
+#[derive(Debug)]
 pub struct CryptoKey {
     pub id: CryptoKeyId,
     pub name: CryptoKeyName,
