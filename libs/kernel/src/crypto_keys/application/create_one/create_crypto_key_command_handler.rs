@@ -22,6 +22,10 @@ impl <R: CryptoKeyRepository, E: EventBus> CommandHandler for CreateCryptoKeyCom
     fn handle(&self, _command: Box<dyn Command>) -> Box<dyn CommandBusResponse> {
         todo!()
     }
+    
+    fn subscribet_to(&self) -> String {
+        todo!()
+    }
 }
 
 
