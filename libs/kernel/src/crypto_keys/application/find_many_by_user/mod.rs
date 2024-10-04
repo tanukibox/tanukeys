@@ -1,4 +1,3 @@
 pub mod crypto_keys_by_user_finder;
 pub mod find_crypto_keys_by_user_query;
 pub mod find_crypto_key_by_user_q_handler;
-pub mod crypto_key_query_response;
