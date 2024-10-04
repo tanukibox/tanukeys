@@ -20,9 +20,9 @@ pub(crate) async fn controller<R: CryptoKeyRepository>(
 ) -> HttpResponse {
     let params = web::Query::<Params>::from_query(req.query_string())
         .unwrap_or(web::Query(Params { user_id: String::from("") }));
-    let user_id = params.user_id.clone();
-    let user_id = UserId::new(user_id.parse().unwrap());
-    let crypto_key_id = CryptoKeyId::new(crypto_key_id.parse().unwrap());
+    let user_id = Some(params.user_id.clone());
+    let user_id = UserId::new(user_id);
+    let crypto_key_id = CryptoKeyId::new(Some(crypto_key_id.parse().unwrap()));
     if user_id.is_err() || crypto_key_id.is_err() {
         return HttpResponse::BadRequest().finish()
     }

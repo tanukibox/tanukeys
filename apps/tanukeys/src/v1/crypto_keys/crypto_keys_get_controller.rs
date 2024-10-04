@@ -19,7 +19,7 @@ pub(crate) async fn controller<R: CryptoKeyRepository>(
 ) -> HttpResponse {
     let params = web::Query::<Params>::from_query(req.query_string())
         .unwrap_or(web::Query(Params { user_id: String::from("") }));
-    let user_id = params.user_id.clone();
+    let user_id = Some(params.user_id.clone());
     let query = FindCryptoKeysByUserQuery { user_id };
 
     let res = query_bus.ask(Box::new(query)).await;

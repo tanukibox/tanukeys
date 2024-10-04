@@ -7,12 +7,12 @@ pub struct CryptoKeyIdMother {}
 
 impl CryptoKeyIdMother {
     pub fn random() -> CryptoKeyId {
-        CryptoKeyId::new(Uuid::new_v4().to_string()).unwrap()
+        CryptoKeyId::new(Some(Uuid::new_v4().to_string())).unwrap()
     }
 
     pub fn with_params(value: Option<String>) -> CryptoKeyId {
         match value {
-            Some(value) => CryptoKeyId::new(value).unwrap(),
+            Some(value) => CryptoKeyId::new(Some(value)).unwrap(),
             None => Self::random(),
         }
     }

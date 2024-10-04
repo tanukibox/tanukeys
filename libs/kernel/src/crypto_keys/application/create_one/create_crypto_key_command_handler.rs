@@ -57,9 +57,12 @@ impl <R: CryptoKeyRepository, E: EventBus> CommandHandler for CreateCryptoKeyCom
         let description = description.unwrap();
         let logged_user = logged_user.unwrap();
 
-        self.creator.run(id, name, payload, user_id, description, logged_user).await;
+        let res = self.creator.run(id, name, payload, user_id, description, logged_user).await;
 
-        CryptoKeyCommandResponse::boxed_ok()
+        match res {
+            Ok(_) => CryptoKeyCommandResponse::boxed_ok(),
+            Err(err) => CryptoKeyCommandResponse::boxed_err(err)
+        }
     }
     
     fn subscribet_to(&self) -> String {

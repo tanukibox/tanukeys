@@ -16,12 +16,12 @@ impl CryptoKeyDescriptionMother {
         let gen_one_char = || CHARSET[rng.gen_range(0..CHARSET.len())] as char;
 
         let random_str: String = iter::repeat_with(gen_one_char).take(name_size).collect();
-        CryptoKeyDescription::new(random_str).unwrap()
+        CryptoKeyDescription::new(Some(random_str)).unwrap()
     }
 
     pub fn with_params(value: Option<String>) -> CryptoKeyDescription {
         match value {
-            Some(value) => CryptoKeyDescription::new(value).unwrap(),
+            Some(value) => CryptoKeyDescription::new(Some(value)).unwrap(),
             None => Self::random(),
         }
     }

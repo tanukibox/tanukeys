@@ -14,12 +14,12 @@ impl UserNameMother {
         let gen_one_char = || CHARSET[rng.gen_range(0..CHARSET.len())] as char;
         let name_size = rand::thread_rng().gen_range(5..15);
         let random_str: String = iter::repeat_with(gen_one_char).take(name_size).collect();
-        UserName::new(random_str).unwrap()
+        UserName::new(Some(random_str)).unwrap()
     }
 
     pub fn with_params(value: Option<String>) -> UserName {
         match value {
-            Some(value) => UserName::new(value).unwrap(),
+            Some(value) => UserName::new(Some(value)).unwrap(),
             None => Self::random(),
         }
     }

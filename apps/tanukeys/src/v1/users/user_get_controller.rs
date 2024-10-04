@@ -15,7 +15,7 @@ pub(crate) async fn controller<R: UserRepository>(
     user_id: web::Path<String>,
     finder: web::Data<UserFinder<R>>,
 ) -> HttpResponse {
-    let user_id = UserId::new(user_id.parse().unwrap());
+    let user_id = UserId::new(Some(user_id.to_string()));
     if user_id.is_err() {
         return HttpResponse::BadRequest().finish()
     }

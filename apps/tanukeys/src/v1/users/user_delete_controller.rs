@@ -16,12 +16,12 @@ pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     if auth_user.is_none() {
         return HttpResponse::Unauthorized().finish();
     }
-    let auth_user = UserId::new(auth_user.unwrap().to_str().unwrap().to_string());
+    let auth_user = UserId::new(Some(auth_user.unwrap().to_str().unwrap_or("").to_string()));
     if auth_user.is_err() {
         return HttpResponse::Unauthorized().finish();
     }
     let auth_user = auth_user.unwrap();
-    let user_id = UserId::new(user_id.clone());
+    let user_id = UserId::new(Some(user_id.clone()));
     if user_id.is_err() {
         return HttpResponse::BadRequest().finish();
     }
