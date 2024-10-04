@@ -11,6 +11,12 @@ pub mod user_id {
     }
 
     #[test]
+    fn create_null_id() {
+        let res = UserId::new(None);
+        assert!(res.is_err())
+    }
+
+    #[test]
     fn create_empty_id() {
         let res = UserId::new(Some("".to_string()));
         assert!(res.is_err())
