@@ -39,6 +39,14 @@ impl CryptoKeyQueryResponse {
         let res = CryptoKeyQueryResponse::err(error);
         Box::new(res)
     }
+
+    pub fn is_err(&self) -> bool {
+        self.error.is_some()
+    }
+
+    pub fn is_ok(&self) -> bool {
+        self.error.is_none()
+    }
 }
 
 impl QueryBusResponse for CryptoKeyQueryResponse {
