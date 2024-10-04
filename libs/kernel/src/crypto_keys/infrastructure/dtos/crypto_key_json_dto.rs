@@ -8,20 +8,20 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct CryptoKeyJsonDto {
-    pub id: String,
-    pub name: String,
-    pub payload: String,
-    pub user_id: String,
-    pub description: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub payload: Option<String>,
+    pub user_id: Option<String>,
+    pub description: Option<String>,
 }
 
 pub fn parse_to_dto(key: &CryptoKey) -> CryptoKeyJsonDto {
     CryptoKeyJsonDto {
-        id: key.id.value(),
-        name: key.name.value(),
-        payload: key.payload.value(),
-        user_id: key.user_id.value(),
-        description: key.description.value(),
+        id: Some(key.id.value()),
+        name: Some(key.name.value()),
+        payload: Some(key.payload.value()),
+        user_id: Some(key.user_id.value()),
+        description: Some(key.description.value()),
     }
 }
 

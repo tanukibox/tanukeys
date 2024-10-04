@@ -18,11 +18,11 @@ pub struct SqlxCryptoKey {
 impl SqlxCryptoKey {
     pub fn to_domain(self) -> CryptoKey {
         CryptoKey::new(
-            CryptoKeyId::new(self.id).unwrap(),
-            CryptoKeyName::new(self.name).unwrap(),
-            CryptoKeyPayload::new(self.payload).unwrap(),
-            UserId::new(self.user_id).unwrap(),
-            CryptoKeyDescription::new(self.description).unwrap(),
+            CryptoKeyId::new(Some(self.id)).unwrap(),
+            CryptoKeyName::new(Some(self.name)).unwrap(),
+            CryptoKeyPayload::new(Some(self.payload)).unwrap(),
+            UserId::new(Some(self.user_id)).unwrap(),
+            CryptoKeyDescription::new(Some(self.description)).unwrap(),
         )
     }
 

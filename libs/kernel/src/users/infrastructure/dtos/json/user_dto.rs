@@ -6,15 +6,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
 pub struct UserDto {
-    pub id: String,
-    pub name: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
     pub bio: Option<String>,
 }
 
 pub fn parse_to_dto(user: &User) -> UserDto {
     UserDto {
-        id: user.id.value(),
-        name: user.name.value(),
+        id: Some(user.id.value()),
+        name: Some(user.name.value()),
         bio: user.bio.value(),
     }
 }

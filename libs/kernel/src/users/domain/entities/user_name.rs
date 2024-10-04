@@ -5,7 +5,11 @@ pub struct UserName {
 }
 
 impl UserName {
-    pub fn new(value: String) -> Result<UserName, DomainError> {
+    pub fn new(value: Option<String>) -> Result<UserName, DomainError> {
+        if value.is_none() {
+            return Err(DomainError::ValueObjectError { value: "User name must not be null".to_string() })
+        }
+        let value = value.unwrap();
         Ok(Self { value })
     }
 
@@ -16,7 +20,7 @@ impl UserName {
 
 impl Clone for UserName {
     fn clone(&self) -> Self {
-        let res = Self::new(self.value());
+        let res = Self::new(Some(self.value()));
         res.unwrap()
     }
 }

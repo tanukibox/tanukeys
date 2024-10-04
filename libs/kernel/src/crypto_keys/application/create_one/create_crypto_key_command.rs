@@ -11,6 +11,8 @@ pub struct CreateCryptoKeyCommand {
 }
 
 impl CreateCryptoKeyCommand {
+    pub const COMMAND_TYPE: &'static str = "CreateCryptoKeyCommand";
+
     pub fn new(id: Option<String>, name: Option<String>, payload: Option<String>, user_id: Option<String>, description: Option<String>, 
         logged_user: Option<String>) -> CreateCryptoKeyCommand {
             
@@ -20,7 +22,7 @@ impl CreateCryptoKeyCommand {
 
 impl Command for CreateCryptoKeyCommand {
     fn command_type(&self) -> String {
-        "CreateCryptoKeyCommand".to_string()
+        CreateCryptoKeyCommand::COMMAND_TYPE.to_string()
     }
     
     fn as_any(&self) -> &dyn std::any::Any {

@@ -7,7 +7,11 @@ pub struct CryptoKeyName {
 }
 
 impl CryptoKeyName {
-    pub fn new(val: String) -> Result<Self, DomainError> {
+    pub fn new(val: Option<String>) -> Result<Self, DomainError> {
+        if val.is_none() {
+            return Err(DomainError::ValueObjectError { value: "Cryptokey name must not be null".to_string() })
+        }
+        let val = val.unwrap();
         Ok(Self { value: val })
     }
 
@@ -18,7 +22,7 @@ impl CryptoKeyName {
 
 impl Clone for CryptoKeyName {
     fn clone(&self) -> Self {
-        Self::new(self.value.clone()).unwrap()
+        Self::new(Some(self.value.clone())).unwrap()
     }
 }
 

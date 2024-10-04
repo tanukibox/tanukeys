@@ -4,13 +4,13 @@ use cqrs::domain::query::Query;
 
 
 pub struct FindCryptoKeysByUserQuery {
-    pub user_id: String,
+    pub user_id: Option<String>,
 }
 
 impl FindCryptoKeysByUserQuery {
     pub const QUERY_TYPE: &'static str = "FindCryptoKeysByUserQuery";
 
-    pub fn new(user_id: String) -> FindCryptoKeysByUserQuery {
+    pub fn new(user_id: Option<String>) -> FindCryptoKeysByUserQuery {
         FindCryptoKeysByUserQuery { user_id }
     }
 }

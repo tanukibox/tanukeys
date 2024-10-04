@@ -7,7 +7,11 @@ pub struct UserId {
 }
 
 impl UserId {
-    pub fn new(id: String) -> Result<Self, DomainError> {
+    pub fn new(id: Option<String>) -> Result<Self, DomainError> {
+        if id.is_none() {
+            return Err(DomainError::ValueObjectError { value: "User id must not be null".to_string() })
+        }
+        let id = id.unwrap();
         if id == "" {
             return Err(DomainError::ValueObjectError { value: "User id must not be empty".to_string() })
         }
@@ -47,6 +51,6 @@ impl Hash for UserId {
 
 impl Clone for UserId {
     fn clone(&self) -> Self {
-        Self::new(self.value.clone()).unwrap()
+        Self::new(Some(self.value.clone())).unwrap()
     }
 }
