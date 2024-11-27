@@ -22,7 +22,7 @@ impl CommandBus for InMemoryCommandBus {
     }
     
     fn dispatch(&self, command: Box<dyn Command>) -> Box<dyn CommandBusResponse> {
-        let handler = self.handlers.get(&command.get_type());
+        let handler = self.handlers.get(&command.command_type());
         if handler.is_none() {
             panic!("No handler found for command: {}", command.command_type());
         }
