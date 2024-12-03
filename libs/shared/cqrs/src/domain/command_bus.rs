@@ -6,7 +6,7 @@ use super::{command::Command, command_bus_response::CommandBusResponse, command_
 
 
 #[async_trait]
-pub trait CommandBus {
+pub trait CommandBus: Send + Sync + 'static {
     fn register(&mut self, handler: Arc<dyn CommandHandler>);
     async fn dispatch(&self, command: Box<dyn Command>) -> Box<dyn CommandBusResponse>;
 }
