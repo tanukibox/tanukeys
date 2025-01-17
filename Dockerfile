@@ -2,7 +2,7 @@
 ############## Build stage ##############
 #########################################
 
-FROM rust:1.80 AS builder
+FROM rust:1.81 AS builder
 
 WORKDIR /app
 COPY . .
