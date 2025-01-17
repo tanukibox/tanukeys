@@ -12,7 +12,7 @@ RUN cargo build --release
 ############## Runtime stage #############
 ##########################################
 
-FROM rust:1.80-slim
+FROM rust:1.81-slim
 
 RUN apt-get update
 RUN apt-get install -y ca-certificates
