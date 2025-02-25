@@ -1,6 +1,6 @@
 # Código de Conducta de TanukiBox
 
-[English 🇬🇧](/CODE_OF_CONDUCT.md) [Español 🇪🇸](./ES.md)
+[English 🇬🇧](/CODE_OF_CONDUCT.md) [Español 🇪🇸](./ES.md) [日本語 🇯🇵](./JP.md)
 
 ## 1. Introducción
 Este documento establece un código de conducta basado en los principios del software libre, inspirado en el [Manifiesto GNU](https://www.gnu.org/gnu/manifesto.en.html). Nuestra comunidad valora la libertad, la cooperación y la inclusión, y promovemos el respeto mutuo entre todos los participantes.
