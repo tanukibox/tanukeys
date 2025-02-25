@@ -1,6 +1,6 @@
 # 🐻 Tanukeys
 
-[English 🇬🇧](/README.md) [Español 🇪🇸](./ES.md)
+[English 🇬🇧](/README.md) [Español 🇪🇸](./ES.md) [日本語 🇯🇵](./JP.md)
 
 Servicio para almacenar claves públicas de usuarios con diversos propósitos, tales como la verificación de firmas de mensajes, el cifrado de información para un usuario específico, el almacenamiento de direcciones de billeteras de criptomonedas y la simplificación del intercambio de claves entre dispositivos. El servicio también es compatible con algoritmos criptográficos post-cuánticos para garantizar su seguridad a largo plazo.
 
