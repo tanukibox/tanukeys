@@ -1,6 +1,6 @@
 # TanukiBoxの行動規範
 
-[English 🇬🇧](/CODE_OF_CONDUCT.md) [日本語 🇯🇵](./JP.md)
+[English 🇬🇧](/CODE_OF_CONDUCT.md) [Español 🇪🇸](./ES.md) [日本語 🇯🇵](./JP.md)
 
 ## 1. はじめに
 この文書は、[GNUマニフェスト](https://www.gnu.org/gnu/manifesto.en.html) に触発されたフリーソフトウェアの原則に基づく行動規範を定めたものです。私たちのコミュニティは、自由、協力、包括性を重んじ、すべての参加者間で相互尊重を促進します。
