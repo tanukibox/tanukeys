@@ -4,11 +4,18 @@ class CryptoKey {
   +id : string
   +name : string
   +payload : string
-  +user_id : string
   +type : string
   +domain : string
   +status : string
   +description : string
 }
+
+class User {
+  +id : UserId
+  +name : UserName
+  +bio : UserBio
+}
+
+User "1" -- "*" CryptoKey
 
 @enduml
