@@ -16,6 +16,7 @@ class User {
   +bio : string
 }
 
-User "1" -- "*" CryptoKey
+User "1" <-- "*" CryptoKey: owner
+CryptoKey "1" --> "0..1" CryptoKey: mother
 
 @enduml
