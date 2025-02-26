@@ -1,0 +1,14 @@
+@startuml
+
+class CryptoKey {
+  +id : string
+  +name : string
+  +payload : string
+  +user_id : string
+  +type : string
+  +domain : string
+  +status : string
+  +description : string
+}
+
+@enduml
