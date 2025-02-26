@@ -11,9 +11,9 @@ class CryptoKey {
 }
 
 class User {
-  +id : UserId
-  +name : UserName
-  +bio : UserBio
+  +id : string
+  +name : string
+  +bio : string
 }
 
 User "1" -- "*" CryptoKey
