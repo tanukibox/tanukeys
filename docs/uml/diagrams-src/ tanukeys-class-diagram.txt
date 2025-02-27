@@ -16,7 +16,16 @@ class User {
   +bio : string
 }
 
-User "1" <-- "*" CryptoKey: owner
-CryptoKey "1" --> "0..1" CryptoKey: mother
+User "1" <-- "*" CryptoKey : owner
+
+' Clase Signature que relaciona dos CryptoKey
+class Signature {
+  +id : string
+  +date : Date
+  +algorithm : string
+}
+
+Signature "*" <-- "1" CryptoKey : mother
+Signature "0..1" --> "1" CryptoKey : child
 
 @enduml
