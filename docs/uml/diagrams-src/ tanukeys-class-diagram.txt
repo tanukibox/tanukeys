@@ -18,7 +18,6 @@ class User {
 
 User "1" <-- "*" CryptoKey : owner
 
-' Clase Signature que relaciona dos CryptoKey
 class Signature {
   +id : string
   +date : Date
