@@ -7,12 +7,14 @@ Service for storing public keys of users for various purposes such as message si
 
 ## Features
 
-- **Public Key Storage**: Store public keys associated with individual users or devices.
-- **Message Signature Verification**: Retrieve stored public keys to verify signed messages.
-- **Data Encryption**: Use the stored public keys to encrypt data intended for a specific user.
-- **Cryptocurrency Wallets**: Manage public keys for various cryptocurrency wallets.
-- **Key Exchange Simplification**: Facilitate easy public key exchange between devices.
-- **Post-Quantum Cryptography Support**: Includes the ability to store keys for post-quantum algorithms, ensuring long-term security.
+- [ ] **Public Key Storage**: Store public keys associated with individual users or devices.
+- [ ] **Message Signature Verification**: Retrieve stored public keys to verify signed messages.
+- [ ] **Data Encryption**: Use the stored public keys to encrypt data intended for a specific user.
+- [ ] **Cryptocurrency Wallets**: Manage public keys for various cryptocurrency wallets.
+- [ ] **Post-Quantum Cryptography Support**: Includes the ability to store keys for post-quantum algorithms, ensuring long-term security.
+- [ ] **Federated Key Retrieval**: Support importing and verifying public keys from external Tanukeys instances, enabling interoperability across federated networks.
+- [ ] **Federated Subscription System**: Enable instances to subscribe to other Tanukeys instances to automatically sync and update public keys as they change.
+- [ ] **Signed Subkeys**: Allow users to create signed subkeys that reference a master key, ensuring hierarchical key management.
 
 
 ## Technology Stack
