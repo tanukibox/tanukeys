@@ -2,7 +2,10 @@
 
 [English 🇬🇧](./README.md) [Español 🇪🇸](./docs/readme/ES.md) [日本語 🇯🇵](./docs/readme/JP.md)
 
-Service for storing public keys of users for various purposes such as message signature verification, encrypting information for a specific user, storing cryptocurrency wallet addresses, and simplifying key exchanges between devices. The service also supports post-quantum cryptographic algorithms for future-proofing.
+Service for storing public keys of users for various purposes such as message signature verification, encrypting information for a specific user, storing cryptocurrency wallet addresses, and simplifying key exchanges between devices. The service also supports post-quantum cryptographic algorithms for future-proofing.  
+
+Tanukeys is designed as a **federated system**, allowing instances to interoperate by retrieving and verifying public keys from other Tanukeys instances. This enables seamless key sharing, automatic updates through instance subscriptions, and a decentralized trust model for enhanced security and reliability.  
+
 
 
 ## Features
