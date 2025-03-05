@@ -1,0 +1,75 @@
+/// Entity representing a subscription in the system.
+/// 
+/// A subscription represents a relationship between a user and a domain,
+/// with an associated external domain. It serves as a way to manage
+/// and track domain access and permissions.
+
+use crate::shared::domain::entities::user_id::UserId;
+use crate::subscriptions::domain::entities::subscription_id::SubscriptionId;
+use crate::subscriptions::domain::entities::subscription_domain::SubscriptionDomain;
+use crate::subscriptions::domain::entities::external_domain::ExternalDomain;
+use aggregate_root::domain::aggregate_root::AggregateRoot;
+
+#[derive(Debug)]
+pub struct Subscription {
+    pub id: SubscriptionId,
+    pub user_id: UserId,
+    pub domain: SubscriptionDomain,
+    pub external_domain: ExternalDomain,
+}
+
+impl Subscription {
+    /// Creates a new subscription.
+    /// 
+    /// # Arguments
+    /// 
+    /// * `id` - The unique identifier of the subscription
+    /// * `user_id` - The ID of the user who owns the subscription
+    /// * `domain` - The domain associated with the subscription
+    /// * `external_domain` - The external domain associated with the subscription
+    /// 
+    /// # Returns
+    /// 
+    /// A new `Subscription` instance
+    pub fn new(
+        id: SubscriptionId,
+        user_id: UserId,
+        domain: SubscriptionDomain,
+        external_domain: ExternalDomain,
+    ) -> Self {
+        Self {
+            id,
+            user_id,
+            domain,
+            external_domain,
+        }
+    }
+}
+
+impl AggregateRoot for Subscription {
+    fn get_type() -> String {
+        "kernel.subscription".to_string()
+    }
+}
+
+impl Clone for Subscription {
+    fn clone(&self) -> Self {
+        Self::new(
+            self.id.clone(),
+            self.user_id.clone(),
+            self.domain.clone(),
+            self.external_domain.clone(),
+        )
+    }
+}
+
+impl PartialEq for Subscription {
+    fn eq(&self, other: &Self) -> bool {
+        self.id.value() == other.id.value() &&
+        self.user_id.value() == other.user_id.value() &&
+        self.domain.value() == other.domain.value() &&
+        self.external_domain.value() == other.external_domain.value()
+    }
+}
+
+impl Eq for Subscription {} 
