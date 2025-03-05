@@ -1,9 +1,3 @@
-/// Entity representing a subscription in the system.
-/// 
-/// A subscription represents a relationship between a user and a domain,
-/// with an associated external domain. It serves as a way to manage
-/// and track domain access and permissions.
-
 use crate::shared::domain::entities::user_id::UserId;
 use crate::subscriptions::domain::entities::subscription_id::SubscriptionId;
 use crate::subscriptions::domain::entities::subscription_domain::SubscriptionDomain;
@@ -19,18 +13,6 @@ pub struct Subscription {
 }
 
 impl Subscription {
-    /// Creates a new subscription.
-    /// 
-    /// # Arguments
-    /// 
-    /// * `id` - The unique identifier of the subscription
-    /// * `user_id` - The ID of the user who owns the subscription
-    /// * `domain` - The domain associated with the subscription
-    /// * `external_domain` - The external domain associated with the subscription
-    /// 
-    /// # Returns
-    /// 
-    /// A new `Subscription` instance
     pub fn new(
         id: SubscriptionId,
         user_id: UserId,
