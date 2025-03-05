@@ -21,7 +21,7 @@ pub mod v1;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    dotenv::from_path("./apps/main_http_api/.env").ok();
+    dotenv::from_path("./apps/tanukeys/.env").ok();
 
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
