@@ -1,3 +1,7 @@
+/// Controller for updating users.
+/// 
+/// This module handles PUT requests to update existing users in the system.
+/// It requires proper authentication and validates the input data before updating the user.
 
 use actix_web::{
     web, HttpRequest, HttpResponse
@@ -10,6 +14,26 @@ use kernel::users::{
     application::update_one::user_updater::UserUpdater, domain::user_repository::UserRepository, infrastructure::dtos::json::user_dto::UserDto
 };
 
+/// Handles PUT requests to update a user.
+/// 
+/// This function processes PUT requests to update an existing user.
+/// It validates the authentication token and input data before updating the user.
+/// 
+/// # Arguments
+/// 
+/// * `dto` - The JSON DTO containing the updated user data
+/// * `req` - The HTTP request containing authentication headers
+/// * `updater` - The user updater service
+/// 
+/// # Returns
+/// 
+/// An `HttpResponse` with:
+/// - 202 Accepted on successful update
+/// - 400 Bad Request for invalid input
+/// - 401 Unauthorized for missing/invalid authentication
+/// - 404 Not Found if the user doesn't exist
+/// - 409 Conflict if the user already exists
+/// - 500 Internal Server Error for other errors
 pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     dto: web::Json<UserDto>,
     req: HttpRequest,

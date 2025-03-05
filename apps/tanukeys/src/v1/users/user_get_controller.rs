@@ -1,3 +1,7 @@
+/// Controller for retrieving a specific user.
+/// 
+/// This module handles GET requests to retrieve a specific user by their ID.
+/// It requires proper user identification and validates the input parameters.
 
 use actix_web::{
     web,
@@ -11,6 +15,23 @@ use kernel::users::{
     infrastructure::dtos::json::user_dto::parse_to_dto,
 };
 
+/// Handles GET requests to retrieve a specific user.
+/// 
+/// This function processes GET requests to retrieve a user by their ID.
+/// It validates the user ID parameter before retrieving the user.
+/// 
+/// # Arguments
+/// 
+/// * `user_id` - The ID of the user to retrieve
+/// * `finder` - The user finder service
+/// 
+/// # Returns
+/// 
+/// An `HttpResponse` with:
+/// - 200 OK with the user data on success
+/// - 400 Bad Request for invalid parameters
+/// - 404 Not Found if the user doesn't exist
+/// - 500 Internal Server Error for other errors
 pub(crate) async fn controller<R: UserRepository>(
     user_id: web::Path<String>,
     finder: web::Data<UserFinder<R>>,

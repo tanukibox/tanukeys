@@ -1,3 +1,7 @@
+/// Controller for deleting users.
+/// 
+/// This module handles DELETE requests to remove users from the system.
+/// It requires proper authentication and validates the input parameters before deletion.
 
 use actix_web::{
     web, HttpRequest, HttpResponse
@@ -7,6 +11,25 @@ use kernel::shared::domain::entities::user_id::UserId;
 use kernel::shared::domain::errors::DomainError;
 use kernel::users::{application::delete_one::user_deleter::UserDeleter, domain::user_repository::UserRepository};
 
+/// Handles DELETE requests to remove a user.
+/// 
+/// This function processes DELETE requests to remove a user.
+/// It validates the authentication token and input parameters before deletion.
+/// 
+/// # Arguments
+/// 
+/// * `user_id` - The ID of the user to delete
+/// * `req` - The HTTP request containing authentication headers
+/// * `deleter` - The user deleter service
+/// 
+/// # Returns
+/// 
+/// An `HttpResponse` with:
+/// - 202 Accepted on successful deletion
+/// - 400 Bad Request for invalid parameters
+/// - 401 Unauthorized for missing/invalid authentication
+/// - 404 Not Found if the user doesn't exist
+/// - 500 Internal Server Error for other errors
 pub(crate) async fn controller<R: UserRepository, E: EventBus>(
     user_id: web::Path<String>,
     req: HttpRequest,
