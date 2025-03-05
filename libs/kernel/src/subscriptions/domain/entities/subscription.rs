@@ -1,19 +1,19 @@
 use crate::shared::domain::entities::user_id::UserId;
-use crate::subscriptions::domain::entities::subscription_domain::SubscriptionDomain;
+use crate::crypto_keys::domain::entities::crypto_key_domain::CryptoKeyDomain;
 use crate::subscriptions::domain::entities::external_domain::ExternalDomain;
 use aggregate_root::domain::aggregate_root::AggregateRoot;
 
 #[derive(Debug)]
 pub struct Subscription {
     pub user_id: UserId,
-    pub key_domain: SubscriptionDomain,
+    pub key_domain: CryptoKeyDomain,
     pub external_domain: ExternalDomain,
 }
 
 impl Subscription {
     pub fn new(
         user_id: UserId,
-        key_domain: SubscriptionDomain,
+        key_domain: CryptoKeyDomain,
         external_domain: ExternalDomain,
     ) -> Self {
         Self {
