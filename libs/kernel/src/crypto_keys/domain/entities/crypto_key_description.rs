@@ -8,6 +8,9 @@ pub struct CryptoKeyDescription {
 
 impl CryptoKeyDescription {
     pub fn new(id: String) -> Result<Self, DomainError> {
+        if id == "" {
+            return Err(DomainError::ValueObjectError { value: "Crypto key description must not be empty".to_string() })
+        }
         Ok(Self { value: id })
     }
 

@@ -3,9 +3,11 @@ use crate::shared::domain::entities::user_id::UserId;
 use aggregate_root::domain::aggregate_root::AggregateRoot;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
+use std::fmt::Debug;
 
 use super::crypto_key_description::CryptoKeyDescription;
 
+#[derive(Debug)]
 pub struct CryptoKey {
     pub id: CryptoKeyId,
     pub name: CryptoKeyName,
@@ -31,3 +33,15 @@ impl Clone for CryptoKey {
         Self::new(self.id.clone(), self.name.clone(), self.payload.clone(), self.user_id.clone(), self.description.clone())
     }
 }
+
+impl PartialEq for CryptoKey {
+    fn eq(&self, other: &Self) -> bool {
+        self.id.value() == other.id.value() &&
+        self.name.value() == other.name.value() &&
+        self.payload.value() == other.payload.value() &&
+        self.user_id.value() == other.user_id.value() &&
+        self.description.value() == other.description.value()
+    }
+}
+
+impl Eq for CryptoKey {}

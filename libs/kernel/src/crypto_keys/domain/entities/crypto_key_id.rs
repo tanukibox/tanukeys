@@ -15,6 +15,9 @@ impl CryptoKeyId {
         if contains_upper {
             return Err(DomainError::ValueObjectError { value: "Cryptokey id must not contain uppercase characters".to_string() })
         }
+        if id == "" {
+            return Err(DomainError::ValueObjectError { value: "Cryptokey id must not be empty".to_string() })
+        }
         Ok(Self { value: id })
     }
 
