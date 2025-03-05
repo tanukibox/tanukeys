@@ -141,4 +141,28 @@ pub mod crypto_key_tests {
         let result = CryptoKeyStatus::new("".to_string());
         assert!(result.is_err());
     }
+
+    #[test]
+    fn test_crypto_key_status_validation() {
+        // Test valid statuses
+        let active = CryptoKeyStatus::new("active".to_string()).unwrap();
+        assert_eq!(active.value(), "active");
+        assert!(active.is_active());
+        assert!(!active.is_revoked());
+
+        let revoked = CryptoKeyStatus::new("revoked".to_string()).unwrap();
+        assert_eq!(revoked.value(), "revoked");
+        assert!(!revoked.is_active());
+        assert!(revoked.is_revoked());
+
+        // Test case insensitivity
+        let active_upper = CryptoKeyStatus::new("ACTIVE".to_string()).unwrap();
+        assert_eq!(active_upper.value(), "active");
+        assert!(active_upper.is_active());
+
+        // Test invalid status
+        let result = CryptoKeyStatus::new("invalid".to_string());
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("Invalid crypto key status"));
+    }
 }
