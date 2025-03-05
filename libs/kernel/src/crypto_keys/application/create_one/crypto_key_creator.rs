@@ -6,6 +6,9 @@ use crate::crypto_keys::domain::entities::crypto_key_description::CryptoKeyDescr
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
+use crate::crypto_keys::domain::entities::crypto_key_type::CryptoKeyType;
+use crate::crypto_keys::domain::entities::crypto_key_domain::CryptoKeyDomain;
+use crate::crypto_keys::domain::entities::crypto_key_status::CryptoKeyStatus;
 use crate::crypto_keys::domain::events::crypto_key_created_event::CryptoKeyCreatedEvent;
 use crate::shared::domain::entities::user_id::UserId;
 use crate::shared::domain::errors::DomainError;
@@ -22,20 +25,41 @@ impl<R: CryptoKeyRepository, E: EventBus> CryptoKeyCreator<R, E> {
         CryptoKeyCreator { repository: crypto_key_repository, event_bus }
     }
 
-    pub async fn run(&self, id: CryptoKeyId, name: CryptoKeyName, payload: CryptoKeyPayload, user_id: UserId, description: CryptoKeyDescription,
-                        logged_user: UserId) -> Result<(), DomainError> {
+    pub async fn run(
+        &self,
+        id: CryptoKeyId,
+        name: CryptoKeyName,
+        payload: CryptoKeyPayload,
+        user_id: UserId,
+        description: CryptoKeyDescription,
+        key_type: CryptoKeyType,
+        domain: CryptoKeyDomain,
+        status: CryptoKeyStatus,
+        logged_user: UserId,
+    ) -> Result<(), DomainError> {
         debug!("Starting crypto key creation");
         if user_id != logged_user {
             debug!("User not authorized to create crypto key with id: {}", id.value());
             return Err(DomainError::UserNotAuthorized { user_id: logged_user.value() })
         }
-        let key = CryptoKey::new(id.clone(), name.clone(), payload.clone(), user_id.clone(), description.clone());
+
+        let key = CryptoKey::new(id.clone(), name.clone(), payload.clone(), user_id.clone(), description.clone(), key_type.clone(), domain.clone(), status.clone());
         let res = self.repository.create_one(&key).await;
         if res.is_err() {
             debug!("Error creating crypto key with id: {}", id.value());
             return Err(res.err().unwrap());
         }
-        let created_event = CryptoKeyCreatedEvent::new_shared(id.clone(), name, payload, user_id);
+
+        let created_event = CryptoKeyCreatedEvent::new_shared(
+            id.clone(),
+            name.clone(),
+            payload.clone(),
+            user_id.clone(),
+            description.clone(),
+            key_type.clone(),
+            domain.clone(),
+            status.clone(),
+        );
         self.event_bus.publish(created_event).await;
         debug!("Crypto key with id: {} created", id.value());
         Ok(())

@@ -35,7 +35,16 @@ impl<R: CryptoKeyRepository, E: EventBus> CryptoKeyDeleter<R, E> {
             debug!("Error deleting crypto key with id: {}", id.value());
             return Err(res.err().unwrap());
         }
-        let deleted_event = CryptoKeyCreatedEvent::new_shared(id.clone(), key.name, key.payload, user_id);
+        let deleted_event = CryptoKeyCreatedEvent::new_shared(
+            id.clone(),
+            key.name.clone(),
+            key.payload.clone(),
+            user_id.clone(),
+            key.description.clone(),
+            key.key_type.clone(),
+            key.domain.clone(),
+            key.status.clone(),
+        );
         self.event_bus.publish(deleted_event).await;
         debug!("Crypto key with id: {} deleted", id.value());
         Ok(())

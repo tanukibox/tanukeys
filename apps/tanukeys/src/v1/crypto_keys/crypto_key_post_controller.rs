@@ -1,4 +1,3 @@
-
 use actix_web::{web, HttpRequest, HttpResponse};
 use events::domain::event_bus::EventBus;
 use kernel::crypto_keys::application::create_one::crypto_key_creator::CryptoKeyCreator;
@@ -29,7 +28,17 @@ pub async fn controller<R: CryptoKeyRepository, E: EventBus>(
     }
     let key = key.unwrap();
 
-    let res = creator.run(key.id, key.name, key.payload, key.user_id, key.description, auth_user).await;
+    let res = creator.run(
+        key.id,
+        key.name,
+        key.payload,
+        key.user_id,
+        key.description,
+        key.key_type,
+        key.domain,
+        key.status,
+        auth_user,
+    ).await;
     match res {
         Ok(_) => HttpResponse::Accepted().finish(),
         Err(err) => {

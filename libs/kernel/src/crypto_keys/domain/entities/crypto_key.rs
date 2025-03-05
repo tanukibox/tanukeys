@@ -3,6 +3,9 @@ use crate::shared::domain::entities::user_id::UserId;
 use aggregate_root::domain::aggregate_root::AggregateRoot;
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
+use crate::crypto_keys::domain::entities::crypto_key_type::CryptoKeyType;
+use crate::crypto_keys::domain::entities::crypto_key_domain::CryptoKeyDomain;
+use crate::crypto_keys::domain::entities::crypto_key_status::CryptoKeyStatus;
 use std::fmt::Debug;
 
 use super::crypto_key_description::CryptoKeyDescription;
@@ -14,11 +17,32 @@ pub struct CryptoKey {
     pub payload: CryptoKeyPayload,
     pub user_id: UserId,
     pub description: CryptoKeyDescription,
+    pub key_type: CryptoKeyType,
+    pub domain: CryptoKeyDomain,
+    pub status: CryptoKeyStatus,
 }
 
 impl CryptoKey {
-    pub fn new(id: CryptoKeyId,name: CryptoKeyName, payload: CryptoKeyPayload, user_id: UserId, description: CryptoKeyDescription) -> Self {
-        Self { id, name, payload, user_id, description }
+    pub fn new(
+        id: CryptoKeyId,
+        name: CryptoKeyName,
+        payload: CryptoKeyPayload,
+        user_id: UserId,
+        description: CryptoKeyDescription,
+        key_type: CryptoKeyType,
+        domain: CryptoKeyDomain,
+        status: CryptoKeyStatus,
+    ) -> Self {
+        Self { 
+            id, 
+            name, 
+            payload, 
+            user_id, 
+            description,
+            key_type,
+            domain,
+            status,
+        }
     }
 }
 
@@ -30,7 +54,16 @@ impl AggregateRoot for CryptoKey {
 
 impl Clone for CryptoKey {
     fn clone(&self) -> Self {
-        Self::new(self.id.clone(), self.name.clone(), self.payload.clone(), self.user_id.clone(), self.description.clone())
+        Self::new(
+            self.id.clone(),
+            self.name.clone(),
+            self.payload.clone(),
+            self.user_id.clone(),
+            self.description.clone(),
+            self.key_type.clone(),
+            self.domain.clone(),
+            self.status.clone(),
+        )
     }
 }
 
@@ -40,7 +73,10 @@ impl PartialEq for CryptoKey {
         self.name.value() == other.name.value() &&
         self.payload.value() == other.payload.value() &&
         self.user_id.value() == other.user_id.value() &&
-        self.description.value() == other.description.value()
+        self.description.value() == other.description.value() &&
+        self.key_type.value() == other.key_type.value() &&
+        self.domain.value() == other.domain.value() &&
+        self.status.value() == other.status.value()
     }
 }
 

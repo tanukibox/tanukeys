@@ -1,4 +1,10 @@
-use crate::crypto_keys::domain::entities::{crypto_key::CryptoKey, crypto_key_description::CryptoKeyDescription};
+use crate::crypto_keys::domain::entities::{
+    crypto_key::CryptoKey,
+    crypto_key_description::CryptoKeyDescription,
+    crypto_key_type::CryptoKeyType,
+    crypto_key_domain::CryptoKeyDomain,
+    crypto_key_status::CryptoKeyStatus,
+};
 use crate::crypto_keys::domain::entities::crypto_key_id::CryptoKeyId;
 use crate::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
 use crate::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
@@ -13,6 +19,9 @@ pub struct CryptoKeyJsonDto {
     pub payload: String,
     pub user_id: String,
     pub description: String,
+    pub key_type: String,
+    pub domain: String,
+    pub status: String,
 }
 
 pub fn parse_to_dto(key: &CryptoKey) -> CryptoKeyJsonDto {
@@ -22,6 +31,9 @@ pub fn parse_to_dto(key: &CryptoKey) -> CryptoKeyJsonDto {
         payload: key.payload.value(),
         user_id: key.user_id.value(),
         description: key.description.value(),
+        key_type: key.key_type.value(),
+        domain: key.domain.value(),
+        status: key.status.value(),
     }
 }
 
@@ -46,5 +58,26 @@ pub fn parse_to_domain(dto: &CryptoKeyJsonDto) -> Result<CryptoKey, DomainError>
     if key_description.is_err() {
         return Err(key_description.err().unwrap())
     }
-    Ok(CryptoKey::new(id?, name?, payload?, user_id?, key_description?))
+    let key_type = CryptoKeyType::new(dto.key_type.clone());
+    if key_type.is_err() {
+        return Err(key_type.err().unwrap())
+    }
+    let domain = CryptoKeyDomain::new(dto.domain.clone());
+    if domain.is_err() {
+        return Err(domain.err().unwrap())
+    }
+    let status = CryptoKeyStatus::new(dto.status.clone());
+    if status.is_err() {
+        return Err(status.err().unwrap())
+    }
+    Ok(CryptoKey::new(
+        id?,
+        name?,
+        payload?,
+        user_id?,
+        key_description?,
+        key_type?,
+        domain?,
+        status?,
+    ))
 }

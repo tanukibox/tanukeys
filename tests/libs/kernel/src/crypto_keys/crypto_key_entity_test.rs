@@ -5,6 +5,9 @@ pub mod crypto_key_tests {
     use kernel::crypto_keys::domain::entities::crypto_key_name::CryptoKeyName;
     use kernel::crypto_keys::domain::entities::crypto_key_payload::CryptoKeyPayload;
     use kernel::crypto_keys::domain::entities::crypto_key_description::CryptoKeyDescription;
+    use kernel::crypto_keys::domain::entities::crypto_key_type::CryptoKeyType;
+    use kernel::crypto_keys::domain::entities::crypto_key_domain::CryptoKeyDomain;
+    use kernel::crypto_keys::domain::entities::crypto_key_status::CryptoKeyStatus;
     use kernel::shared::domain::entities::user_id::UserId;
 
     #[test]
@@ -15,6 +18,9 @@ pub mod crypto_key_tests {
         assert!(key.payload.value().len() > 0);
         assert!(key.user_id.value().len() > 0);
         assert!(key.description.value().len() > 0);
+        assert!(key.key_type.value().len() > 0);
+        assert!(key.domain.value().len() > 0);
+        assert!(key.status.value().len() > 0);
     }
 
     #[test]
@@ -24,6 +30,9 @@ pub mod crypto_key_tests {
         let payload = "test-payload".to_string();
         let user_id = "user-123".to_string();
         let description = "Test Description".to_string();
+        let key_type = "test-type".to_string();
+        let domain = "test-domain".to_string();
+        let status = "active".to_string();
 
         let key = CryptoKeyMother::with_params(
             Some(id.clone()),
@@ -31,6 +40,9 @@ pub mod crypto_key_tests {
             Some(description.clone()),
             Some(payload.clone()),
             Some(user_id.clone()),
+            Some(key_type.clone()),
+            Some(domain.clone()),
+            Some(status.clone()),
         );
 
         assert_eq!(key.id.value(), id);
@@ -38,6 +50,9 @@ pub mod crypto_key_tests {
         assert_eq!(key.payload.value(), payload);
         assert_eq!(key.user_id.value(), user_id);
         assert_eq!(key.description.value(), description);
+        assert_eq!(key.key_type.value(), key_type);
+        assert_eq!(key.domain.value(), domain);
+        assert_eq!(key.status.value(), status);
     }
 
     #[test]
@@ -50,6 +65,9 @@ pub mod crypto_key_tests {
         assert_eq!(original.payload.value(), cloned.payload.value());
         assert_eq!(original.user_id.value(), cloned.user_id.value());
         assert_eq!(original.description.value(), cloned.description.value());
+        assert_eq!(original.key_type.value(), cloned.key_type.value());
+        assert_eq!(original.domain.value(), cloned.domain.value());
+        assert_eq!(original.status.value(), cloned.status.value());
     }
 
     #[test]
@@ -59,6 +77,9 @@ pub mod crypto_key_tests {
         let payload = "test-payload".to_string();
         let user_id = "user-123".to_string();
         let description = "Test Description".to_string();
+        let key_type = "test-type".to_string();
+        let domain = "test-domain".to_string();
+        let status = "active".to_string();
 
         let key1 = CryptoKeyMother::with_params(
             Some(id.clone()),
@@ -66,6 +87,9 @@ pub mod crypto_key_tests {
             Some(description.clone()),
             Some(payload.clone()),
             Some(user_id.clone()),
+            Some(key_type.clone()),
+            Some(domain.clone()),
+            Some(status.clone()),
         );
 
         let key2 = CryptoKeyMother::with_params(
@@ -74,6 +98,9 @@ pub mod crypto_key_tests {
             Some(description),
             Some(payload),
             Some(user_id),
+            Some(key_type),
+            Some(domain),
+            Some(status),
         );
 
         assert_eq!(key1, key2);
@@ -104,6 +131,14 @@ pub mod crypto_key_tests {
 
         let result = CryptoKeyDescription::new("".to_string());
         assert!(result.is_err());
-    }
 
+        let result = CryptoKeyType::new("".to_string());
+        assert!(result.is_err());
+
+        let result = CryptoKeyDomain::new("".to_string());
+        assert!(result.is_err());
+
+        let result = CryptoKeyStatus::new("".to_string());
+        assert!(result.is_err());
+    }
 }
