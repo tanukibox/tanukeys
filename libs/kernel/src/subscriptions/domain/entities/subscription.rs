@@ -1,12 +1,10 @@
 use crate::shared::domain::entities::user_id::UserId;
-use crate::subscriptions::domain::entities::subscription_id::SubscriptionId;
 use crate::subscriptions::domain::entities::subscription_domain::SubscriptionDomain;
 use crate::subscriptions::domain::entities::external_domain::ExternalDomain;
 use aggregate_root::domain::aggregate_root::AggregateRoot;
 
 #[derive(Debug)]
 pub struct Subscription {
-    pub id: SubscriptionId,
     pub user_id: UserId,
     pub domain: SubscriptionDomain,
     pub external_domain: ExternalDomain,
@@ -14,13 +12,11 @@ pub struct Subscription {
 
 impl Subscription {
     pub fn new(
-        id: SubscriptionId,
         user_id: UserId,
         domain: SubscriptionDomain,
         external_domain: ExternalDomain,
     ) -> Self {
         Self {
-            id,
             user_id,
             domain,
             external_domain,
@@ -47,7 +43,6 @@ impl Clone for Subscription {
 
 impl PartialEq for Subscription {
     fn eq(&self, other: &Self) -> bool {
-        self.id.value() == other.id.value() &&
         self.user_id.value() == other.user_id.value() &&
         self.domain.value() == other.domain.value() &&
         self.external_domain.value() == other.external_domain.value()
