@@ -4,7 +4,6 @@ use async_trait::async_trait;
 
 use crate::domain::{domain_event::DomainEvent, event_bus::EventBus, event_handler::EventHandler};
 
-
 pub struct InMemoryEventBus {
     pub handlers_by_sub: HashMap<String, Vec<Arc<dyn EventHandler>>>,
 }
@@ -19,7 +18,7 @@ impl InMemoryEventBus {
 
 #[async_trait]
 impl EventBus for InMemoryEventBus {
-    async fn publish(&self, event: Arc<dyn DomainEvent>) {
+    async fn publish<'a>(&self, event: Arc<dyn DomainEvent + 'a>) {
         let event_type = event.event_type();
         if let Some(handlers) = self.handlers_by_sub.get(&event_type) {
             for handler in handlers {
@@ -29,10 +28,7 @@ impl EventBus for InMemoryEventBus {
     }
 }
 
-
-pub struct MyEvent {
-}
-
+pub struct MyEvent {}
 
 impl DomainEvent for MyEvent {
     fn event_type(&self) -> String {
