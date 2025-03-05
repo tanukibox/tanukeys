@@ -6,19 +6,19 @@ use aggregate_root::domain::aggregate_root::AggregateRoot;
 #[derive(Debug)]
 pub struct Subscription {
     pub user_id: UserId,
-    pub domain: SubscriptionDomain,
+    pub key_domain: SubscriptionDomain,
     pub external_domain: ExternalDomain,
 }
 
 impl Subscription {
     pub fn new(
         user_id: UserId,
-        domain: SubscriptionDomain,
+        key_domain: SubscriptionDomain,
         external_domain: ExternalDomain,
     ) -> Self {
         Self {
             user_id,
-            domain,
+            key_domain,
             external_domain,
         }
     }
@@ -33,9 +33,8 @@ impl AggregateRoot for Subscription {
 impl Clone for Subscription {
     fn clone(&self) -> Self {
         Self::new(
-            self.id.clone(),
             self.user_id.clone(),
-            self.domain.clone(),
+            self.key_domain.clone(),
             self.external_domain.clone(),
         )
     }
@@ -44,7 +43,7 @@ impl Clone for Subscription {
 impl PartialEq for Subscription {
     fn eq(&self, other: &Self) -> bool {
         self.user_id.value() == other.user_id.value() &&
-        self.domain.value() == other.domain.value() &&
+        self.key_domain.value() == other.key_domain.value() &&
         self.external_domain.value() == other.external_domain.value()
     }
 }
