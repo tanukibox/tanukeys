@@ -5,6 +5,7 @@ use kernel::crypto_keys::domain::crypto_key_repository::CryptoKeyRepository;
 mod crypto_key_post_controller;
 mod crypto_key_get_controller;
 mod crypto_keys_get_controller;
+mod crypto_key_delete_controller;
 
 pub fn router<R: CryptoKeyRepository, E: EventBus>(cfg: &mut ServiceConfig) {
     cfg.service(
@@ -12,5 +13,6 @@ pub fn router<R: CryptoKeyRepository, E: EventBus>(cfg: &mut ServiceConfig) {
             .configure(|cfg: &mut ServiceConfig| -> () { cfg.route("/", web::get().to(crypto_keys_get_controller::controller::<R>)); })
             .configure(|cfg: &mut ServiceConfig| -> () { cfg.route("/{crypto_key_id}", web::get().to(crypto_key_get_controller::controller::<R>)); })
             .configure(|cfg: &mut ServiceConfig| -> () { cfg.route("/", web::post().to(crypto_key_post_controller::controller::<R, E>)); })
+            .configure(|cfg: &mut ServiceConfig| -> () { cfg.route("/{crypto_key_id}", web::delete().to(crypto_key_delete_controller::controller::<R, E>)); })
     );
 }
