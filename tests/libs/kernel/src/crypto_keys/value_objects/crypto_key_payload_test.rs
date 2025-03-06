@@ -10,6 +10,12 @@ pub mod crypto_key_payload_tests {
     }
 
     #[test]
+    fn test_single_char_payload() {
+        let payload = CryptoKeyPayload::new("a".to_string()).unwrap();
+        assert_eq!(payload.value(), "a");
+    }
+
+    #[test]
     fn test_empty_payload() {
         let result = CryptoKeyPayload::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));

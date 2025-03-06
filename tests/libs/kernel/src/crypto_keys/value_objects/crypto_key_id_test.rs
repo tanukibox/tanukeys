@@ -10,6 +10,12 @@ pub mod crypto_key_id_tests {
     }
 
     #[test]
+    fn test_single_char_id() {
+        let id = CryptoKeyId::new("a".to_string()).unwrap();
+        assert_eq!(id.value(), "a");
+    }
+
+    #[test]
     fn test_empty_id() {
         let result = CryptoKeyId::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));

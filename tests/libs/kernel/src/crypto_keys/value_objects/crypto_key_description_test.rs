@@ -10,6 +10,12 @@ pub mod crypto_key_description_tests {
     }
 
     #[test]
+    fn test_single_char_description() {
+        let description = CryptoKeyDescription::new("a".to_string()).unwrap();
+        assert_eq!(description.value(), "a");
+    }
+
+    #[test]
     fn test_empty_description() {
         let result = CryptoKeyDescription::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));

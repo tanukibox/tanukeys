@@ -10,6 +10,12 @@ pub mod crypto_key_name_tests {
     }
 
     #[test]
+    fn test_single_char_name() {
+        let name = CryptoKeyName::new("a".to_string()).unwrap();
+        assert_eq!(name.value(), "a");
+    }
+
+    #[test]
     fn test_empty_name() {
         let result = CryptoKeyName::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));

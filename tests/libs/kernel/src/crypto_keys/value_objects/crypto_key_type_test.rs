@@ -10,6 +10,12 @@ pub mod crypto_key_type_tests {
     }
 
     #[test]
+    fn test_single_char_type() {
+        let key_type = CryptoKeyType::new("a".to_string()).unwrap();
+        assert_eq!(key_type.value(), "a");
+    }
+
+    #[test]
     fn test_empty_type() {
         let result = CryptoKeyType::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));

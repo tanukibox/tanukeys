@@ -10,6 +10,12 @@ pub mod crypto_key_domain_tests {
     }
 
     #[test]
+    fn test_single_char_domain() {
+        let domain = CryptoKeyDomain::new("a".to_string()).unwrap();
+        assert_eq!(domain.value(), "a");
+    }
+
+    #[test]
     fn test_empty_domain() {
         let result = CryptoKeyDomain::new("".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
