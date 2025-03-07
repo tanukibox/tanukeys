@@ -8,7 +8,6 @@ name: Publish Docker Image
 on:
   release:
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
     type: [published]
 
 env:
