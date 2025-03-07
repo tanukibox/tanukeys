@@ -8,7 +8,7 @@ name: Publish Docker Image
 on:
   release:
     # Publish semver tags as releases.
-    type: [published]
+    type: published
 
 env:
   # Use docker.io for Docker Hub if empty
