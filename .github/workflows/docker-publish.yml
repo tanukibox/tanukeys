@@ -6,8 +6,7 @@ name: Publish Docker Image
 # documentation.
 
 on:
-  push:
-    branches: [ "main" ]
+  release:
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
 
