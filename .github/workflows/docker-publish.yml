@@ -9,6 +9,7 @@ on:
   release:
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
+    type: [published]
 
 env:
   # Use docker.io for Docker Hub if empty
