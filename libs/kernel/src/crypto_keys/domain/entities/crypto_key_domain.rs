@@ -8,9 +8,18 @@ pub struct CryptoKeyDomain {
 
 impl CryptoKeyDomain {
     pub fn new(val: String) -> Result<Self, DomainError> {
-        if val == "" {
-            return Err(DomainError::ValueObjectError { value: "Crypto key domain must not be empty".to_string() })
+        if val.is_empty() {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key domain must not be empty".to_string() 
+            });
         }
+
+        if !val.chars().all(|c| c.is_alphanumeric() || c == '.') {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key domain must only contain alphanumeric characters and dots".to_string() 
+            });
+        }
+
         Ok(Self { value: val })
     }
 
@@ -27,7 +36,7 @@ impl Clone for CryptoKeyDomain {
 
 impl PartialEq for CryptoKeyDomain {
     fn eq(&self, other: &Self) -> bool {
-        self.value() == other.value()
+        self.value == other.value
     }
 }
 

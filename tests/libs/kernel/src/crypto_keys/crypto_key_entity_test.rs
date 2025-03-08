@@ -31,7 +31,7 @@ pub mod crypto_key_tests {
         let user_id = "user-123".to_string();
         let description = "Test Description".to_string();
         let key_type = "test-type".to_string();
-        let domain = "test-domain".to_string();
+        let domain = "test.domain".to_string();
         let status = "active".to_string();
 
         let key = CryptoKeyMother::with_params(
@@ -78,7 +78,7 @@ pub mod crypto_key_tests {
         let user_id = "user-123".to_string();
         let description = "Test Description".to_string();
         let key_type = "test-type".to_string();
-        let domain = "test-domain".to_string();
+        let domain = "test.domain".to_string();
         let status = "active".to_string();
 
         let key1 = CryptoKeyMother::with_params(
