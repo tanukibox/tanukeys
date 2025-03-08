@@ -69,14 +69,14 @@ impl Clone for CryptoKey {
 
 impl PartialEq for CryptoKey {
     fn eq(&self, other: &Self) -> bool {
-        self.id.value() == other.id.value() &&
-        self.name.value() == other.name.value() &&
-        self.payload.value() == other.payload.value() &&
-        self.user_id.value() == other.user_id.value() &&
-        self.description.value() == other.description.value() &&
-        self.key_type.value() == other.key_type.value() &&
-        self.domain.value() == other.domain.value() &&
-        self.status.value() == other.status.value()
+        self.id == other.id &&
+        self.name == other.name &&
+        self.payload == other.payload &&
+        self.user_id == other.user_id &&
+        self.description == other.description &&
+        self.key_type == other.key_type &&
+        self.domain == other.domain &&
+        self.status == other.status
     }
 }
 
