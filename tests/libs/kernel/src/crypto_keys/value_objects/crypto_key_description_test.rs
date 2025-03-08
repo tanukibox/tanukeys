@@ -16,8 +16,44 @@ pub mod crypto_key_description_tests {
     }
 
     #[test]
+    fn test_description_with_single_spaces() {
+        let description = CryptoKeyDescription::new("This is a valid description".to_string()).unwrap();
+        assert_eq!(description.value(), "This is a valid description");
+    }
+
+    #[test]
     fn test_empty_description() {
         let result = CryptoKeyDescription::new("".to_string());
+        assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
+    }
+
+    #[test]
+    fn test_description_starting_with_space() {
+        let result = CryptoKeyDescription::new(" starts with space".to_string());
+        assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
+        if let Err(DomainError::ValueObjectError { value }) = result {
+            assert_eq!(value, "Crypto key description must not start with a space");
+        }
+    }
+
+    #[test]
+    fn test_description_ending_with_space() {
+        let result = CryptoKeyDescription::new("ends with space ".to_string());
+        assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
+        if let Err(DomainError::ValueObjectError { value }) = result {
+            assert_eq!(value, "Crypto key description must not end with a space");
+        }
+    }
+
+    #[test]
+    fn test_description_with_consecutive_spaces() {
+        let result = CryptoKeyDescription::new("contains  two spaces".to_string());
+        assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
+        if let Err(DomainError::ValueObjectError { value }) = result {
+            assert_eq!(value, "Crypto key description must not contain consecutive spaces");
+        }
+
+        let result = CryptoKeyDescription::new("contains   three spaces".to_string());
         assert!(matches!(result, Err(DomainError::ValueObjectError { .. })));
     }
 

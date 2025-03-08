@@ -7,11 +7,32 @@ pub struct CryptoKeyDescription {
 }
 
 impl CryptoKeyDescription {
-    pub fn new(id: String) -> Result<Self, DomainError> {
-        if id == "" {
-            return Err(DomainError::ValueObjectError { value: "Crypto key description must not be empty".to_string() })
+    pub fn new(val: String) -> Result<Self, DomainError> {
+        if val.is_empty() {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key description must not be empty".to_string() 
+            });
         }
-        Ok(Self { value: id })
+
+        if val.starts_with(' ') {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key description must not start with a space".to_string() 
+            });
+        }
+
+        if val.ends_with(' ') {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key description must not end with a space".to_string() 
+            });
+        }
+
+        if val.contains("  ") {
+            return Err(DomainError::ValueObjectError { 
+                value: "Crypto key description must not contain consecutive spaces".to_string() 
+            });
+        }
+
+        Ok(Self { value: val })
     }
 
     pub fn value(&self) -> String {
