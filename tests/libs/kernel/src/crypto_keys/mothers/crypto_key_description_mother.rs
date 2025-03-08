@@ -9,13 +9,19 @@ pub struct CryptoKeyDescriptionMother {}
 
 impl CryptoKeyDescriptionMother {
     pub fn random() -> CryptoKeyDescription {
-        let name_size = rand::thread_rng().gen_range(0..150);
+        let name_size = rand::thread_rng().gen_range(30..150);
 
         const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz.,()-!@#$%^&*";
         let mut rng = rand::thread_rng();
         let gen_one_char = || CHARSET[rng.gen_range(0..CHARSET.len())] as char;
 
-        let random_str: String = iter::repeat_with(gen_one_char).take(name_size).collect();
+        let random_str: String = iter::repeat_with(gen_one_char)
+            .take(name_size)
+            .collect::<String>()
+            .trim()
+            .replace("  ", " ")
+            .to_string();
+
         CryptoKeyDescription::new(random_str).unwrap()
     }
 
