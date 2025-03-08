@@ -15,12 +15,16 @@ impl CryptoKeyDescriptionMother {
         let mut rng = rand::thread_rng();
         let gen_one_char = || CHARSET[rng.gen_range(0..CHARSET.len())] as char;
 
-        let random_str: String = iter::repeat_with(gen_one_char)
+        let mut random_str: String = iter::repeat_with(gen_one_char)
             .take(name_size)
             .collect::<String>()
             .trim()
-            .replace("  ", " ")
             .to_string();
+
+        // Replace double spaces until none remain
+        while random_str.contains("  ") {
+            random_str = random_str.replace("  ", " ");
+        }
 
         CryptoKeyDescription::new(random_str).unwrap()
     }
