@@ -5,6 +5,7 @@ use std::hash::{Hash, Hasher};
 pub enum CryptoKeyStatusValue {
     Active,
     Revoked,
+    ChainBroken,
 }
 
 impl CryptoKeyStatusValue {
@@ -12,6 +13,7 @@ impl CryptoKeyStatusValue {
         match self {
             CryptoKeyStatusValue::Active => "active",
             CryptoKeyStatusValue::Revoked => "revoked",
+            CryptoKeyStatusValue::ChainBroken => "chain_broken",
         }
     }
 
@@ -19,8 +21,9 @@ impl CryptoKeyStatusValue {
         match s.to_lowercase().as_str() {
             "active" => Ok(CryptoKeyStatusValue::Active),
             "revoked" => Ok(CryptoKeyStatusValue::Revoked),
+            "chain_broken" => Ok(CryptoKeyStatusValue::ChainBroken),
             _ => Err(DomainError::ValueObjectError { 
-                value: format!("Invalid crypto key status: {}. Valid values are: active, revoked", s) 
+                value: format!("Invalid crypto key status: {}. Valid values are: active, revoked, chain_broken", s) 
             }),
         }
     }
@@ -53,6 +56,10 @@ impl CryptoKeyStatus {
 
     pub fn is_revoked(&self) -> bool {
         matches!(self.value, CryptoKeyStatusValue::Revoked)
+    }
+
+    pub fn is_chain_broken(&self) -> bool {
+        matches!(self.value, CryptoKeyStatusValue::ChainBroken)
     }
 }
 
