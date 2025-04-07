@@ -29,5 +29,3 @@ Tanukeys is designed as a **federated system**, allowing instances to interopera
 ## License
 
 This project is licensed under the GNU Affero General Public License (AGPL) v3.0. This license ensures that any modifications to the software, whether used privately or publicly, must be shared under the same license. For full details, refer to the LICENSE file or visit [https://www.gnu.org/licenses/agpl-3.0.html](https://www.gnu.org/licenses/agpl-3.0.html).
-
-
