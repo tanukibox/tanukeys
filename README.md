@@ -1,4 +1,4 @@
-# 🐻 Tanukeys
+<h1 align="center">🐻 Tanukeys</h1>
 
 [English 🇬🇧](./README.md) [Español 🇪🇸](./docs/readme/ES.md) [日本語 🇯🇵](./docs/readme/JP.md)
 
