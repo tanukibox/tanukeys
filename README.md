@@ -26,6 +26,22 @@ Tanukeys is designed as a **federated system**, allowing instances to interopera
 - **Database**: PostgreSQL for persisting public keys and user information.
 
 
+## Contributing
+
+Contributions are welcome! Feel free to submit a Pull Request. But **Make sure you are not contributing to a mirror repository.** Check the following [Repository Status](#-repository-status) section to identify the primary repository.
+
+### 🔄 Repository Status
+
+This project **may be a *mirror*** of another primary repository. Below is a list of all related repositories, indicating whether they are mirrors and their approximate sync frequency:
+
+| Service  | Repository URL                                              | Type      | Sync Frequency        |
+|----------|-------------------------------------------------------------|-----------|-----------------------|
+| Codeberg | `https://codeberg.org/tanukibox/tanukeys`                   | Primary   | N/A                   |
+| Github   | `https://github.com/tanukibox/tanukeys`                     | Mirror    | Every commit          |
+
+> ⚠️ Note: If you are viewing this repository on a platform like GitHub, GitLab, Gitea, Forgejo, etc., be aware that it **might not be the main repository**.
+
+
 ## License
 
 This project is licensed under the GNU Affero General Public License (AGPL) v3.0. This license ensures that any modifications to the software, whether used privately or publicly, must be shared under the same license. For full details, refer to the LICENSE file or visit [https://www.gnu.org/licenses/agpl-3.0.html](https://www.gnu.org/licenses/agpl-3.0.html).
