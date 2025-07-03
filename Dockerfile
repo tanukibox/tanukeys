@@ -2,7 +2,7 @@
 ############## Build stage ##############
 #########################################
 
-FROM rust:1.81 AS builder
+FROM rust:1.88.0 AS builder
 
 WORKDIR /app
 COPY . .
@@ -12,7 +12,7 @@ RUN cargo build --release
 ############## Runtime stage #############
 ##########################################
 
-FROM rust:1.81-slim
+FROM rust:1.88.0-slim
 
 RUN apt-get update
 RUN apt-get install -y ca-certificates
